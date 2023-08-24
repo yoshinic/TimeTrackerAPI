@@ -1,7 +1,7 @@
 import Fluent
 
-public final class WorkModel: Model {
-    public static let schema = "works"
+public final class ActivityModel: Model {
+    public static let schema = "activities"
 
     enum FieldKeys {
         enum v1 {
@@ -19,13 +19,13 @@ public final class WorkModel: Model {
     @Field(key: FieldKeys.v1.color)
     var color: String
 
-    @Children(for: \.$work)
+    @Children(for: \.$activity)
     var records: [RecordModel]
 
     public init() {}
 
     init(
-        _ id: WorkModel.IDValue? = nil,
+        _ id: ActivityModel.IDValue? = nil,
         name: String,
         color: String
     ) {

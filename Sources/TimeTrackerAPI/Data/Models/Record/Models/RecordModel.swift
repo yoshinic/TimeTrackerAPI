@@ -6,7 +6,7 @@ public final class RecordModel: Model {
 
     enum FieldKeys {
         enum v1 {
-            static var workId: FieldKey { "work_id" }
+            static var activityId: FieldKey { "activity_id" }
             static var startedAt: FieldKey { "started_at" }
             static var endedAt: FieldKey { "ended_at" }
         }
@@ -15,8 +15,8 @@ public final class RecordModel: Model {
     @ID()
     public var id: UUID?
 
-    @Parent(key: FieldKeys.v1.workId)
-    var work: WorkModel
+    @Parent(key: FieldKeys.v1.activityId)
+    var activity: ActivityModel
 
     @Field(key: FieldKeys.v1.startedAt)
     var startedAt: Date
@@ -28,12 +28,12 @@ public final class RecordModel: Model {
 
     init(
         _ id: RecordModel.IDValue? = nil,
-        workId: WorkModel.IDValue,
+        activityId: ActivityModel.IDValue,
         startedAt: Date,
         endedAt: Date
     ) {
         self.id = id
-        self.$work.id = workId
+        self.$activity.id = activityId
         self.startedAt = startedAt
         self.endedAt = endedAt
     }

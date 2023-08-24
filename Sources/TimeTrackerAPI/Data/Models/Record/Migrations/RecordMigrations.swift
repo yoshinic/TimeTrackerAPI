@@ -6,13 +6,13 @@ enum RecordMigrations {
             try await db
                 .schema(RecordModel.schema)
                 .id()
-                .field(RecordModel.FieldKeys.v1.workId, .uuid, .required)
+                .field(RecordModel.FieldKeys.v1.activityId, .uuid, .required)
                 .field(RecordModel.FieldKeys.v1.startedAt, .datetime, .required)
                 .field(RecordModel.FieldKeys.v1.endedAt, .datetime, .required)
 
                 .foreignKey(
-                    RecordModel.FieldKeys.v1.workId,
-                    references: WorkModel.schema,
+                    RecordModel.FieldKeys.v1.activityId,
+                    references: ActivityModel.schema,
                     .id
                 )
 

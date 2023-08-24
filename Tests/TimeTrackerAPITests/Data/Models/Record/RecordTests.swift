@@ -15,26 +15,26 @@ final class RecordTests: AbstractionXCTestCase {
     func testCreate() async throws {
         try await migration { db in
 
-            let workName = "sample"
+            let activityName = "sample"
 
-            let newWork = WorkModel(name: workName,color: "#000000")
-            try await newWork.create(on: db)
+            let newActivity = ActivityModel(name: activityName,color: "#000000")
+            try await newActivity.create(on: db)
 
-            let newRecord = RecordModel(workId: newWork.id!, startedAt: Date(), endedAt: Date())
+            let newRecord = RecordModel(activityId: newActivity.id!, startedAt: Date(), endedAt: Date())
             try await newRecord.create(on: db)
 
             guard
                 let found = try await RecordModel
                 .query(on: db)
-                .join(parent: \.$work)
+                .join(parent: \.$activity)
                 .first()
             else {
                 return  XCTFail("")
             }
 
-            let n = try found.joined(WorkModel.self).name
+            let n = try found.joined(ActivityModel.self).name
 
-            XCTAssertTrue(n == workName)
+            XCTAssertTrue(n == activityName)
         }
     }
 }

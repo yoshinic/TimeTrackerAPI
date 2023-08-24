@@ -7,7 +7,7 @@ public extension RecordModel {
         on db: Database
     ) async throws -> RecordModel {
         let newRecord = RecordModel(
-            workId: data.workId,
+            activityId: data.activityId,
             startedAt: data.startedAt,
             endedAt: data.startedAt
         )
@@ -24,14 +24,14 @@ public extension RecordModel {
         guard
             let foundRecord = try await RecordModel
             .query(on: db)
-            .join(parent: \.$work)
+            .join(parent: \.$activity)
             .filter(\.$id == data.recordId)
             .first()
         else {
             throw AppError.notFound
         }
 
-        foundRecord.$work.id = data.workId
+        foundRecord.$activity.id = data.activityId
         foundRecord.startedAt = data.startedAt
         foundRecord.endedAt = data.endedAt
 
@@ -46,13 +46,13 @@ public extension RecordModel {
     ) async throws -> [RecordModel] {
         try await RecordModel
             .query(on: db)
-            .join(parent: \.$work)
+            .join(parent: \.$activity)
             .group { and in
                 if let recordId = data.recordId {
                     and.filter(\.$id == recordId)
                 }
-                if let workId = data.workId {
-                    and.filter(\.$work.$id == workId)
+                if let activityId = data.activityId {
+                    and.filter(\.$activity.$id == activityId)
                 }
             }
             .all()
@@ -60,21 +60,21 @@ public extension RecordModel {
 }
 
 public struct CreateRecord: Codable {
-    let workId: WorkModel.IDValue
+    let activityId: ActivityModel.IDValue
     let startedAt: Date
     let endedAt: Date
 }
 
 public struct UpdateRecord: Codable {
     let recordId: RecordModel.IDValue
-    let workId: WorkModel.IDValue
+    let activityId: ActivityModel.IDValue
     let startedAt: Date
     let endedAt: Date
 }
 
 public struct FindRecord: Codable {
     let recordId: RecordModel.IDValue?
-    let workId: WorkModel.IDValue?
+    let activityId: ActivityModel.IDValue?
 //    let startedAt: Date?
 //    let endedAt: Date?
 }

@@ -3,7 +3,7 @@ import XCTest
 import Foundation
 import FluentKit
 
-final class WorkTests: AbstractionXCTestCase {
+final class ActivityTests: AbstractionXCTestCase {
     override func setUp() async throws {
         try await super.setUp()
     }
@@ -17,11 +17,11 @@ final class WorkTests: AbstractionXCTestCase {
 
             let name = "study"
 
-            let newWork = WorkModel(name: name, color: "#000000")
-            try await newWork.create(on: db)
+            let newActivity = ActivityModel(name: name, color: "#000000")
+            try await newActivity.create(on: db)
 
             guard
-                let found = try await WorkModel
+                let found = try await ActivityModel
                 .query(on: db)
                 .filter(\.$name == name)
                 .first()
