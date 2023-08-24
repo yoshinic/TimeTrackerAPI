@@ -1,4 +1,4 @@
-@testable import TimeTracker
+@testable import TimeTrackerAPI
 import XCTest
 import Foundation
 import FluentKit
@@ -17,7 +17,7 @@ final class WorkTests: AbstractionXCTestCase {
 
             let name = "study"
 
-            let newWork = WorkModel(name: name,color: "#000000")
+            let newWork = WorkModel(name: name, color: "#000000")
             try await newWork.create(on: db)
 
             guard

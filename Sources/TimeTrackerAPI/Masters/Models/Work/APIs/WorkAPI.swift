@@ -1,7 +1,6 @@
-
 import FluentKit
 
-extension WorkModel {
+public extension WorkModel {
     static func create(
         _ data: CreateWork,
         on db: Database
@@ -31,12 +30,12 @@ extension WorkModel {
     }
 }
 
-struct CreateWork: Codable {
+public struct CreateWork: Codable {
     let name: String
     let color: String
 }
 
-struct UpdateWork: Codable {
+public struct UpdateWork: Codable {
     let workId: WorkModel.IDValue
     let name: String
     let color: String

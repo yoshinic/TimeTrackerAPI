@@ -1,7 +1,7 @@
 import Foundation
 import FluentKit
 
-extension RecordModel {
+public extension RecordModel {
     static func create(
         _ data: CreateRecord,
         on db: Database
@@ -59,20 +59,20 @@ extension RecordModel {
     }
 }
 
-struct CreateRecord: Codable {
+public struct CreateRecord: Codable {
     let workId: WorkModel.IDValue
     let startedAt: Date
     let endedAt: Date
 }
 
-struct UpdateRecord: Codable {
+public struct UpdateRecord: Codable {
     let recordId: RecordModel.IDValue
     let workId: WorkModel.IDValue
     let startedAt: Date
     let endedAt: Date
 }
 
-struct FindRecord: Codable {
+public struct FindRecord: Codable {
     let recordId: RecordModel.IDValue?
     let workId: WorkModel.IDValue?
 //    let startedAt: Date?

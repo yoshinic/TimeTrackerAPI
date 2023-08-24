@@ -1,4 +1,4 @@
-@testable import TimeTracker
+@testable import TimeTrackerAPI
 import XCTest
 import FluentSQLiteDriver
 import NIO

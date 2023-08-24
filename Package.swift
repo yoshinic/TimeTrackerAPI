@@ -4,15 +4,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "TimeTracker",
+    name: "TimeTrackerAPI",
     platforms: [
         .macOS(.v10_15),
         .iOS(.v13),
     ],
     products: [
         .library(
-            name: "TimeTracker",
-            targets: ["TimeTracker"]
+            name: "TimeTrackerAPI",
+            targets: ["TimeTrackerAPI"]
         ),
     ],
     dependencies: [
@@ -21,16 +21,16 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "TimeTracker",
+            name: "TimeTrackerAPI",
             dependencies: [
                 .product(name: "Fluent", package: "fluent"),
             ]
         ),
         .testTarget(
-            name: "TimeTrackerTests",
+            name: "TimeTrackerAPITests",
             dependencies: [
                 .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
-                "TimeTracker",
+                "TimeTrackerAPI",
             ]
         ),
     ]

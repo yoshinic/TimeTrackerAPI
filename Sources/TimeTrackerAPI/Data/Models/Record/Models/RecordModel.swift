@@ -1,8 +1,8 @@
 import Foundation
 import Fluent
 
-final class RecordModel: Model {
-    static let schema = "records"
+public final class RecordModel: Model {
+    public static let schema = "records"
 
     enum FieldKeys {
         enum v1 {
@@ -13,7 +13,7 @@ final class RecordModel: Model {
     }
 
     @ID()
-    var id: UUID?
+    public var id: UUID?
 
     @Parent(key: FieldKeys.v1.workId)
     var work: WorkModel
@@ -24,7 +24,7 @@ final class RecordModel: Model {
     @Field(key: FieldKeys.v1.endedAt)
     var endedAt: Date
 
-    init() {}
+    public init() {}
 
     init(
         _ id: RecordModel.IDValue? = nil,
