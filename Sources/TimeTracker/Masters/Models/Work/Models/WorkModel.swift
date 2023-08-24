@@ -6,6 +6,7 @@ final class WorkModel: Model {
     enum FieldKeys {
         enum v1 {
             static var name: FieldKey { "name" }
+            static var color: FieldKey { "color" }
         }
     }
 
@@ -15,6 +16,9 @@ final class WorkModel: Model {
     @Field(key: FieldKeys.v1.name)
     var name: String
 
+    @Field(key: FieldKeys.v1.color)
+    var color: String
+
     @Children(for: \.$work)
     var records: [RecordModel]
 
@@ -22,9 +26,11 @@ final class WorkModel: Model {
 
     init(
         _ id: WorkModel.IDValue? = nil,
-        name: String
+        name: String,
+        color: String
     ) {
         self.id = id
         self.name = name
+        self.color = color
     }
 }

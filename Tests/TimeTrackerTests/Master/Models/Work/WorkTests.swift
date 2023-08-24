@@ -17,7 +17,7 @@ final class WorkTests: AbstractionXCTestCase {
 
             let name = "study"
 
-            let newWork = WorkModel(name: name)
+            let newWork = WorkModel(name: name,color: "#000000")
             try await newWork.create(on: db)
 
             guard

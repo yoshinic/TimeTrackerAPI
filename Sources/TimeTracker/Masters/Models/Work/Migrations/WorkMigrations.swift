@@ -7,6 +7,8 @@ enum WorkMigrations {
                 .schema(WorkModel.schema)
                 .id()
                 .field(WorkModel.FieldKeys.v1.name, .string, .required)
+                .field(WorkModel.FieldKeys.v1.color, .string, .required)
+                .unique(on: WorkModel.FieldKeys.v1.name)
                 .create()
         }
 

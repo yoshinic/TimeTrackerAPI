@@ -17,7 +17,7 @@ final class RecordTests: AbstractionXCTestCase {
 
             let workName = "sample"
 
-            let newWork = WorkModel(name: workName)
+            let newWork = WorkModel(name: workName,color: "#000000")
             try await newWork.create(on: db)
 
             let newRecord = RecordModel(workId: newWork.id!, startedAt: Date(), endedAt: Date())
