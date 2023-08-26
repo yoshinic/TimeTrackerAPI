@@ -1,0 +1,35 @@
+{
+  "configurations" : [
+    {
+      "id" : "3B58E339-B973-4577-A425-C3BD86C19630",
+      "name" : "Configuration 1",
+      "options" : {
+        "environmentVariableEntries" : [
+          {
+            "key" : "DATABASE_STORAGE",
+            "value" : "file"
+          },
+          {
+            "key" : "DATABASE_FILEPATH",
+            "value" : ".\/record.sqlite3"
+          }
+        ]
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "defaultTestExecutionTimeAllowance" : 60,
+    "maximumTestExecutionTimeAllowance" : 120,
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TimeTrackerAPITests",
+        "name" : "TimeTrackerAPITests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "78978D57-6C31-458D-A45D-A5C3332F593C",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "environmentVariableEntries" : [
+      {
+        "key" : "DATABASE_STORAGE",
+        "value" : "file"
+      },
+      {
+        "key" : "DATABASE_FILEPATH",
+        "value" : ".\/sample.sqlite"
+      },
+      {
+        "key" : "DATABASE_FILEDISPOSAL",
+        "value" : "false"
+      }
+    ]
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TimeTrackerAPITests",
+        "name" : "TimeTrackerAPITests"
+      }
+    }
+  ],
+  "version" : 1
+}

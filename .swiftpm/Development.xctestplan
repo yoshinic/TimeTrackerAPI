@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "01674F6F-54D7-44F5-8EDD-3DE0B068EBE9",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "environmentVariableEntries" : [
+      {
+        "key" : "DATABASE_STORAGE",
+        "value" : "memory"
+      }
+    ]
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TimeTrackerAPITests",
+        "name" : "TimeTrackerAPITests"
+      }
+    }
+  ],
+  "version" : 1
+}
