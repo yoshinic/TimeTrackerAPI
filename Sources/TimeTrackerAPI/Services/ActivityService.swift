@@ -25,7 +25,7 @@ public class ActivityService {
             on: db
         )
 
-        return .init(name: new.name, color: new.color, order: order)
+        return .init(id: new.id!, name: new.name, color: new.color, order: order)
     }
 
     public func fetch(
@@ -37,7 +37,9 @@ public class ActivityService {
             .init(id: id, name: name, color: color),
             on: db
         )
-        return a.map { .init(name: $0.name, color: $0.color, order: $0.order) }
+        return a.map {
+            .init(id: $0.id!, name: $0.name, color: $0.color, order: $0.order)
+        }
     }
 
     @discardableResult
@@ -51,7 +53,7 @@ public class ActivityService {
             .init(id: id, name: name, color: color, order: order),
             on: db
         )
-        return .init(name: updated.name, color: updated.color, order: updated.order)
+        return .init(id: updated.id!, name: updated.name, color: updated.color, order: updated.order)
     }
 
     public func delete(
@@ -66,7 +68,8 @@ public class ActivityService {
     }
 }
 
-public struct ActivityData: Codable {
+public struct ActivityData: Codable, Identifiable {
+    public let id: UUID
     public let name: String
     public let color: String
     public let order: Int

@@ -21,7 +21,12 @@ public class RecordService {
             ),
             on: db
         )
-        return .init(activityId: new.activity.id!, startedAt: new.startedAt, endedAt: new.endedAt)
+        return .init(
+            id: new.id!,
+            activityId: new.activity.id!,
+            startedAt: new.startedAt,
+            endedAt: new.endedAt
+        )
     }
 
     public func fetch(
@@ -44,7 +49,12 @@ public class RecordService {
             on: db
         )
         return a.map {
-            .init(activityId: $0.activity.id!, startedAt: $0.startedAt, endedAt: $0.endedAt)
+            .init(
+                id: $0.id!,
+                activityId: $0.activity.id!,
+                startedAt: $0.startedAt,
+                endedAt: $0.endedAt
+            )
         }
     }
 
@@ -64,6 +74,7 @@ public class RecordService {
             on: db
         )
         return .init(
+            id: updated.id!,
             activityId: updated.activity.id!,
             startedAt: updated.startedAt,
             endedAt: updated.endedAt
@@ -88,7 +99,8 @@ public class RecordService {
     }
 }
 
-public struct RecordData: Codable {
+public struct RecordData: Codable, Identifiable {
+    public var id: UUID
     public let activityId: UUID
     public let startedAt: Date
     public let endedAt: Date
