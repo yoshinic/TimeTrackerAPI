@@ -13,7 +13,10 @@ final class RecordTests: AbstractionXCTestCase {
     func testCreate() async throws {
         try await migration { db in
             let name = "sample"
-            let newActivity = try await ActivityModel.create(.init(name: name, color: "#000000"), on: db)
+            let newActivity = try await ActivityModel.create(
+                .init(name: name, color: "#000000", order: 1),
+                on: db
+            )
 
             let newRecord = try await RecordModel.create(
                 .init(activityId: newActivity.id!, startedAt: Date(), endedAt: Date()),
@@ -22,7 +25,17 @@ final class RecordTests: AbstractionXCTestCase {
 
             guard
                 let found = try await RecordModel
-                .fetch(.init(recordId: newRecord.id!, activityId: nil), on: db)
+                .fetch(
+                    .init(
+                        recordId: newRecord.id!,
+                        from: nil,
+                        to: nil,
+                        activityIds: [],
+                        activityNames: [],
+                        activityColors: []
+                    ),
+                    on: db
+                )
                 .first
             else {
                 return  XCTFail("")

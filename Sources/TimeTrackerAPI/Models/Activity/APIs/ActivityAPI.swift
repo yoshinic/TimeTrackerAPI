@@ -5,7 +5,7 @@ extension ActivityModel {
         _ data: CreateActivity,
         on db: Database
     ) async throws -> ActivityModel {
-        let newActivity = ActivityModel(name: data.name, color: data.color)
+        let newActivity = ActivityModel(name: data.name, color: data.color, order: data.order)
         try await newActivity.create(on: db)
         return newActivity
     }
@@ -46,6 +46,7 @@ extension ActivityModel {
 
         found.name = data.name ?? found.name
         found.color = data.color ?? found.color
+        found.order = data.order ?? found.order
         try await found.update(on: db)
         return found
     }
@@ -54,11 +55,16 @@ extension ActivityModel {
         _ data: DeleteActivity,
         on db: Database
     ) async throws {}
+
+    static func count(on db: Database) async throws -> Int {
+        try await ActivityModel.query(on: db).count()
+    }
 }
 
 struct CreateActivity: Codable {
     let name: String
     let color: String
+    let order: Int
 }
 
 struct FetchActivity: Codable {
@@ -71,6 +77,7 @@ struct UpdateActivity: Codable {
     let id: UUID
     let name: String?
     let color: String?
+    let order: Int?
 }
 
 struct DeleteActivity: Codable {

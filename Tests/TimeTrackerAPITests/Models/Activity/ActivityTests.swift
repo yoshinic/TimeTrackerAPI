@@ -12,8 +12,12 @@ final class ActivityTests: AbstractionXCTestCase {
 
     func testCreate() async throws {
         try await migration { db in
+
             let name = "study"
-            let newActivity = try await ActivityModel.create(.init(name: name, color: "#000000"), on: db)
+            let newActivity = try await ActivityModel.create(
+                .init(name: name, color: "#000000", order: 1),
+                on: db
+            )
 
             guard
                 let found = try await ActivityModel

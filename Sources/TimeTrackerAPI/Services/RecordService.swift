@@ -25,11 +25,22 @@ public class RecordService {
     }
 
     public func fetch(
-        recordId: UUID?,
-        activityId: UUID?
+        recordId: UUID? = nil,
+        from: Date? = nil,
+        to: Date? = nil,
+        activityIds: [UUID] = [],
+        activityNames: [String] = [],
+        activityColors: [String] = []
     ) async throws -> [RecordData] {
         let a = try await RecordModel.fetch(
-            .init(recordId: recordId, activityId: activityId),
+            .init(
+                recordId: recordId,
+                from: from,
+                to: to,
+                activityIds: activityIds,
+                activityNames: activityNames,
+                activityColors: activityColors
+            ),
             on: db
         )
         return a.map {

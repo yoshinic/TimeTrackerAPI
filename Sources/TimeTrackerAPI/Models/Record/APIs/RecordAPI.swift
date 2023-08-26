@@ -29,8 +29,28 @@ extension RecordModel {
                 if let recordId = data.recordId {
                     and.filter(\.$id == recordId)
                 }
-                if let activityId = data.activityId {
-                    and.filter(\.$activity.$id == activityId)
+
+                and.group(.or) { or in
+                    data.activityIds.forEach {
+                        or.filter(ActivityModel.self, \.$id == $0)
+                    }
+                }
+                and.group(.or) { or in
+                    data.activityNames.forEach {
+                        or.filter(ActivityModel.self, \.$name == $0)
+                    }
+                }
+                and.group(.or) { or in
+                    data.activityColors.forEach {
+                        or.filter(ActivityModel.self, \.$color == $0)
+                    }
+                }
+
+                if let from = data.from {
+                    and.filter(\.$startedAt == from)
+                }
+                if let to = data.to {
+                    and.filter(\.$endedAt == to)
                 }
             }
             .all()
@@ -75,9 +95,12 @@ struct CreateRecord: Codable {
 
 struct FetchRecord: Codable {
     let recordId: UUID?
-    let activityId: UUID?
-//    let startedAt: Date?
-//    let endedAt: Date?
+    let from: Date?
+    let to: Date?
+
+    let activityIds: [UUID]
+    let activityNames: [String]
+    let activityColors: [String]
 }
 
 struct UpdateRecord: Codable {

@@ -7,6 +7,7 @@ final class ActivityModel: Model {
         enum v1 {
             static var name: FieldKey { "name" }
             static var color: FieldKey { "color" }
+            static var order: FieldKey { "order" }
         }
     }
 
@@ -19,6 +20,9 @@ final class ActivityModel: Model {
     @Field(key: FieldKeys.v1.color)
     var color: String
 
+    @Field(key: FieldKeys.v1.order)
+    var order: Int
+
     @Children(for: \.$activity)
     var records: [RecordModel]
 
@@ -27,10 +31,12 @@ final class ActivityModel: Model {
     init(
         _ id: ActivityModel.IDValue? = nil,
         name: String,
-        color: String
+        color: String,
+        order: Int
     ) {
         self.id = id
         self.name = name
         self.color = color
+        self.order = order
     }
 }

@@ -3,6 +3,8 @@ import FluentKit
 public class ActivityService {
     private let db: Database
 
+    public var count: Int!
+
     init(db: Database) {
         self.db = db
     }
@@ -12,8 +14,18 @@ public class ActivityService {
         name: String,
         color: String
     ) async throws -> ActivityData {
-        let new = try await ActivityModel.create(.init(name: name, color: color), on: db)
-        return .init(name: new.name, color: new.color)
+        if count == nil {
+            count = try await ActivityModel.count(on: db)
+        }
+        let order = count + 1
+        count += 1
+
+        let new = try await ActivityModel.create(
+            .init(name: name, color: color, order: order),
+            on: db
+        )
+
+        return .init(name: new.name, color: new.color, order: order)
     }
 
     public func fetch(
@@ -25,20 +37,21 @@ public class ActivityService {
             .init(id: id, name: name, color: color),
             on: db
         )
-        return a.map { .init(name: $0.name, color: $0.color) }
+        return a.map { .init(name: $0.name, color: $0.color, order: $0.order) }
     }
 
     @discardableResult
     public func update(
         id: UUID,
         name: String? = nil,
-        color: String? = nil
+        color: String? = nil,
+        order: Int? = nil
     ) async throws -> ActivityData {
         let updated = try await ActivityModel.update(
-            .init(id: id, name: name, color: color),
+            .init(id: id, name: name, color: color, order: order),
             on: db
         )
-        return .init(name: updated.name, color: updated.color)
+        return .init(name: updated.name, color: updated.color, order: updated.order)
     }
 
     public func delete(
@@ -56,4 +69,5 @@ public class ActivityService {
 public struct ActivityData: Codable {
     public let name: String
     public let color: String
+    public let order: Int
 }
