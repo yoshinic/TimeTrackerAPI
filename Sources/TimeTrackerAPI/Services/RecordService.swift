@@ -1,19 +1,19 @@
 import Foundation
 import FluentKit
 
-class RecordService {
+public class RecordService {
     private let db: Database
 
     init(db: Database) {
         self.db = db
     }
 
-    func create(
-        activityId: ActivityModel.IDValue,
+    public func create(
+        activityId: UUID,
         startedAt: Date = Date(),
         endedAt: Date? = nil
-    ) async throws -> RecordModel {
-        try await RecordModel.create(
+    ) async throws -> RecordData {
+        let new = try await RecordModel.create(
             .init(
                 activityId: activityId,
                 startedAt: startedAt,
@@ -21,25 +21,29 @@ class RecordService {
             ),
             on: db
         )
+        return .init(activityId: new.activity.id!, startedAt: new.startedAt, endedAt: new.endedAt)
     }
 
-    func fetch(
-        recordId: RecordModel.IDValue?,
-        activityId: ActivityModel.IDValue?
-    ) async throws -> [RecordModel] {
-        try await RecordModel.fetch(
+    public func fetch(
+        recordId: UUID?,
+        activityId: UUID?
+    ) async throws -> [RecordData] {
+        let a = try await RecordModel.fetch(
             .init(recordId: recordId, activityId: activityId),
             on: db
         )
+        return a.map {
+            .init(activityId: $0.activity.id!, startedAt: $0.startedAt, endedAt: $0.endedAt)
+        }
     }
 
-    func update(
-        recordId: RecordModel.IDValue,
-        activityId: ActivityModel.IDValue? = nil,
+    public func update(
+        recordId: UUID,
+        activityId: UUID? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil
-    ) async throws -> RecordModel {
-        try await RecordModel.update(
+    ) async throws -> RecordData {
+        let updated = try await RecordModel.update(
             .init(
                 recordId: recordId,
                 activityId: activityId,
@@ -48,11 +52,16 @@ class RecordService {
             ),
             on: db
         )
+        return .init(
+            activityId: updated.activity.id!,
+            startedAt: updated.startedAt,
+            endedAt: updated.endedAt
+        )
     }
 
-    func delete(
-        recordId: RecordModel.IDValue? = nil,
-        activityId: ActivityModel.IDValue? = nil,
+    public func delete(
+        recordId: UUID? = nil,
+        activityId: UUID? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil
     ) async throws {
@@ -66,4 +75,10 @@ class RecordService {
             on: db
         )
     }
+}
+
+public struct RecordData: Codable {
+    public let activityId: UUID
+    public let startedAt: Date
+    public let endedAt: Date
 }

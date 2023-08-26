@@ -1,43 +1,48 @@
 import FluentKit
 
-class ActivityService {
+public class ActivityService {
     private let db: Database
 
     init(db: Database) {
         self.db = db
     }
 
-    func create(
+    @discardableResult
+    public func create(
         name: String,
         color: String
-    ) async throws -> ActivityModel {
-        try await ActivityModel.create(.init(name: name, color: color), on: db)
+    ) async throws -> ActivityData {
+        let new = try await ActivityModel.create(.init(name: name, color: color), on: db)
+        return .init(name: new.name, color: new.color)
     }
 
-    func fetch(
-        id: ActivityModel.IDValue? = nil,
+    public func fetch(
+        id: UUID? = nil,
         name: String? = nil,
         color: String? = nil
-    ) async throws -> [ActivityModel] {
-        try await ActivityModel.fetch(
+    ) async throws -> [ActivityData] {
+        let a = try await ActivityModel.fetch(
             .init(id: id, name: name, color: color),
             on: db
         )
+        return a.map { .init(name: $0.name, color: $0.color) }
     }
 
-    func update(
-        id: ActivityModel.IDValue,
+    @discardableResult
+    public func update(
+        id: UUID,
         name: String? = nil,
         color: String? = nil
-    ) async throws -> ActivityModel {
-        try await ActivityModel.update(
+    ) async throws -> ActivityData {
+        let updated = try await ActivityModel.update(
             .init(id: id, name: name, color: color),
             on: db
         )
+        return .init(name: updated.name, color: updated.color)
     }
 
-    func delete(
-        id: ActivityModel.IDValue? = nil,
+    public func delete(
+        id: UUID? = nil,
         name: String? = nil,
         color: String? = nil
     ) async throws {
@@ -46,4 +51,9 @@ class ActivityService {
             on: db
         )
     }
+}
+
+public struct ActivityData: Codable {
+    public let name: String
+    public let color: String
 }
