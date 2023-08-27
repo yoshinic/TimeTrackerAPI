@@ -73,4 +73,11 @@ public struct ActivityData: Codable, Identifiable {
     public let name: String
     public let color: String
     public let order: Int
+
+    public init(id: UUID, name: String, color: String, order: Int) {
+        self.id = id
+        self.name = name
+        self.color = color
+        self.order = order
+    }
 }

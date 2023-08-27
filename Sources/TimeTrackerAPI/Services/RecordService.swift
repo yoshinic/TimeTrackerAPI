@@ -121,4 +121,11 @@ public struct RecordData: Codable, Identifiable {
     public let activity: ActivityData
     public let startedAt: Date
     public let endedAt: Date
+
+    public init(id: UUID, activity: ActivityData, startedAt: Date, endedAt: Date) {
+        self.id = id
+        self.activity = activity
+        self.startedAt = startedAt
+        self.endedAt = endedAt
+    }
 }
