@@ -5,7 +5,7 @@ extension ActivityModel {
         _ data: CreateActivity,
         on db: Database
     ) async throws -> ActivityModel {
-        let newActivity = ActivityModel(name: data.name, color: data.color, order: data.order)
+        let newActivity = ActivityModel(data.id, name: data.name, color: data.color, order: data.order)
         try await newActivity.create(on: db)
         return newActivity
     }
@@ -62,6 +62,7 @@ extension ActivityModel {
 }
 
 struct CreateActivity: Codable {
+    let id: UUID?
     let name: String
     let color: String
     let order: Int

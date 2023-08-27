@@ -11,6 +11,7 @@ public class ActivityService {
 
     @discardableResult
     public func create(
+        id: UUID? = nil,
         name: String,
         color: String
     ) async throws -> ActivityData {
@@ -21,7 +22,7 @@ public class ActivityService {
         count += 1
 
         let new = try await ActivityModel.create(
-            .init(name: name, color: color, order: order),
+            .init(id: id,name: name, color: color, order: order),
             on: db
         )
 

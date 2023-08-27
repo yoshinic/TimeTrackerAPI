@@ -13,7 +13,7 @@ final class RecordTests: AbstractionXCTestCase {
     func testCreate() async throws {
         let name = "sample"
         let newActivity = try await ActivityModel.create(
-            .init(name: name, color: "#000000", order: 1),
+            .init(id: UUID(), name: name, color: "#000000", order: 1),
             on: dbm.database
         )
 
