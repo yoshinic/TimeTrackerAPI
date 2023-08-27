@@ -21,9 +21,15 @@ public class RecordService {
             ),
             on: db
         )
+
         return .init(
             id: new.id!,
-            activityId: new.activity.id!,
+            activity: .init(
+                id: new.activity.id!,
+                name: new.activity.name,
+                color: new.activity.color,
+                order: new.activity.order
+            ),
             startedAt: new.startedAt,
             endedAt: new.endedAt
         )
@@ -51,7 +57,12 @@ public class RecordService {
         return a.map {
             .init(
                 id: $0.id!,
-                activityId: $0.activity.id!,
+                activity: .init(
+                    id: $0.activity.id!,
+                    name: $0.activity.name,
+                    color: $0.activity.color,
+                    order: $0.activity.order
+                ),
                 startedAt: $0.startedAt,
                 endedAt: $0.endedAt
             )
@@ -73,9 +84,15 @@ public class RecordService {
             ),
             on: db
         )
+
         return .init(
             id: updated.id!,
-            activityId: updated.activity.id!,
+            activity: .init(
+                id: updated.activity.id!,
+                name: updated.activity.name,
+                color: updated.activity.color,
+                order: updated.activity.order
+            ),
             startedAt: updated.startedAt,
             endedAt: updated.endedAt
         )
@@ -101,7 +118,7 @@ public class RecordService {
 
 public struct RecordData: Codable, Identifiable {
     public var id: UUID
-    public let activityId: UUID
+    public let activity: ActivityData
     public let startedAt: Date
     public let endedAt: Date
 }
