@@ -10,6 +10,7 @@ enum ActivityMigrations {
                 .field(ActivityModel.FieldKeys.v1.color, .string, .required)
                 .field(ActivityModel.FieldKeys.v1.order, .int, .required)
                 .unique(on: ActivityModel.FieldKeys.v1.name)
+                .ignoreExisting()
                 .create()
         }
 

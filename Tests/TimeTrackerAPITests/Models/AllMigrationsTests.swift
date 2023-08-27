@@ -1,12 +1,20 @@
 @testable import TimeTrackerAPI
 import XCTest
 
-final class AllMigrationsTests: AbstractionXCTestCase {
+final class AllMigrationsTests: XCTestCase {
+    var dbm: TestDatabaseManager!
+
     override func setUp() async throws {
         try await super.setUp()
+        dbm = TestDatabaseManager()
+        try await AllMigrations.v1().prepare(on: dbm.database)
+        try await AllMigrations.v1().revert(on: dbm.database)
     }
 
     override func tearDown() async throws {
+        try await dbm.shutdown()
+        dbm = nil
+        
         try await super.tearDown()
     }
 

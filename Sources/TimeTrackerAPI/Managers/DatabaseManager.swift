@@ -3,7 +3,16 @@ import Fluent
 import FluentSQLiteDriver
 import NIO
 
-final class DatabaseManager {
+// 本番用, シングルトン
+final class DatabaseManager: _DatabaseManager {
+    static let shared = DatabaseManager()
+    private override init() {
+        super.init()
+    }
+}
+
+// 本番時とテスト時で分けるための（擬似）抽象クラス
+class _DatabaseManager {
     private let threadPool: NIOThreadPool
     private let eventLoopGroup: EventLoopGroup
     private let dbs: Databases

@@ -1,12 +1,9 @@
 @testable import TimeTrackerAPI
 import XCTest
-import FluentKit
-
-// 参考
-// https://github.com/vapor/fluent-sqlite-driver/blob/main/Tests/FluentSQLiteDriverTests/FluentSQLiteDriverTests.swift
+import Fluent
 
 class AbstractionXCTestCase: XCTestCase {
-    var dbm: DatabaseManager!
+    var dbm: TestDatabaseManager!
 
     override func setUp() async throws {
         try await super.setUp()
@@ -20,10 +17,14 @@ class AbstractionXCTestCase: XCTestCase {
             try FileManager.default.removeItem(atPath: envFilePath)
         }
 
-        dbm = DatabaseManager()
+        dbm = TestDatabaseManager()
+        try await AllMigrations.v1().prepare(on: dbm.database)
+        try await AllMigrations.seed().prepare(on: dbm.database)
     }
 
     override func tearDown() async throws {
+        try await AllMigrations.v1().revert(on: dbm.database)
+        // try await AllMigrations.seed().revert(on: dbm.database)
         try await dbm.shutdown()
         dbm = nil
 
@@ -39,16 +40,6 @@ class AbstractionXCTestCase: XCTestCase {
 
         try await super.tearDown()
     }
-
-    func migration(
-        with closure: (Database) async throws -> Void
-    ) async throws {
-        try await AllMigrations.v1().prepare(on: dbm.database)
-        try await AllMigrations.seed().prepare(on: dbm.database)
-
-        try await closure(dbm.database)
-
-        try await AllMigrations.v1().revert(on: dbm.database)
-        //        try await AllMigrations.seed().revert(on: dbm.database)
-    }
 }
+
+final class TestDatabaseManager: _DatabaseManager {}

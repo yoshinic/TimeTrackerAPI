@@ -16,6 +16,7 @@ enum RecordMigrations {
                     .id
                 )
 
+                .ignoreExisting()
                 .create()
         }
 

@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/sqlite-nio.git",
       "state" : {
-        "revision" : "be453922621c8b119af7e0089334a1b2a7d44282",
-        "version" : "1.5.3"
+        "revision" : "0a33df10377547fd1bbce20078e9f7deae354563",
+        "version" : "1.6.0"
       }
     },
     {

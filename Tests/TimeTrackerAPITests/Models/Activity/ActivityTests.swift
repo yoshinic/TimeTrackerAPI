@@ -11,24 +11,21 @@ final class ActivityTests: AbstractionXCTestCase {
     }
 
     func testCreate() async throws {
-        try await migration { db in
+        let name = "study"
+        let newActivity = try await ActivityModel.create(
+            .init(name: name, color: "#000000", order: 1),
+            on: dbm.database
+        )
 
-            let name = "study"
-            let newActivity = try await ActivityModel.create(
-                .init(name: name, color: "#000000", order: 1),
-                on: db
-            )
-
-            guard
-                let found = try await ActivityModel
-                .fetch(.init(id: nil, name: name, color: nil), on: db)
-                .first
-            else {
-                return  XCTFail("")
-            }
-
-            XCTAssertTrue(newActivity.name == found.name)
-            XCTAssertTrue(newActivity.color == found.color)
+        guard
+            let found = try await ActivityModel
+            .fetch(.init(id: nil, name: name, color: nil), on: dbm.database)
+            .first
+        else {
+            return  XCTFail("")
         }
+
+        XCTAssertTrue(newActivity.name == found.name)
+        XCTAssertTrue(newActivity.color == found.color)
     }
 }

@@ -9,6 +9,6 @@ public class DefaultServiceFactory {
     public lazy var record: RecordService = .init(db: database)
 
     private init() {
-        self.database = DatabaseManager().database
+        self.database = DatabaseManager.shared.database
     }
 }
