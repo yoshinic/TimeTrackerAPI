@@ -6,7 +6,7 @@ import NIO
 // 本番用, シングルトン
 final class DatabaseManager: _DatabaseManager {
     static let shared = DatabaseManager()
-    private override init() {
+    override private init() {
         super.init()
     }
 }
@@ -44,6 +44,21 @@ class _DatabaseManager {
         } else {
             dbs.use(.sqlite(.memory), as: .sqlite)
         }
+
+        // マイグレーションの実行
+        Task {
+            do {
+                try await self.runMigrations()
+            } catch {
+                print("Error running migrations: \(error)")
+            }
+        }
+    }
+
+    private func runMigrations() async throws {
+        // すべてのマイグレーションを実行
+        try await AllMigrations.v1().prepare(on: self.database)
+        try await AllMigrations.seed().prepare(on: self.database)
     }
 
     var database: Database {
