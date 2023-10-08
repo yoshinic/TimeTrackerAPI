@@ -29,6 +29,7 @@ extension ActivityModel {
                     and.filter(\.$color == color)
                 }
             }
+            .sort(\.$order)
             .all()
     }
 
