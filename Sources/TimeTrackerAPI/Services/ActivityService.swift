@@ -22,7 +22,7 @@ public class ActivityService {
         count += 1
 
         let new = try await ActivityModel.create(
-            .init(id: id,name: name, color: color, order: order),
+            .init(id: id, name: name, color: color, order: order),
             on: db
         )
 
@@ -66,6 +66,19 @@ public class ActivityService {
             .init(id: id, name: name, color: color),
             on: db
         )
+    }
+
+    public func move(
+        sourceId: UUID,
+        destinationId: UUID
+    ) async throws -> [ActivityData] {
+        let a = try await ActivityModel.move(
+            .init(sourceId: sourceId, destinationId: destinationId),
+            on: db
+        )
+        return a.map {
+            .init(id: $0.id!, name: $0.name, color: $0.color, order: $0.order)
+        }
     }
 }
 

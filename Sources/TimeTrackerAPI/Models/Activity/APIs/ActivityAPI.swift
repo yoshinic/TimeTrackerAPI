@@ -1,6 +1,7 @@
 import FluentKit
 
 extension ActivityModel {
+    @discardableResult
     static func create(
         _ data: CreateActivity,
         on db: Database
@@ -31,6 +32,7 @@ extension ActivityModel {
             .all()
     }
 
+    @discardableResult
     static func update(
         _ data: UpdateActivity,
         on db: Database
@@ -54,10 +56,34 @@ extension ActivityModel {
     static func delete(
         _ data: DeleteActivity,
         on db: Database
-    ) async throws {}
+    ) async throws {
+        try await ActivityModel.query(on: db).delete()
+    }
 
     static func count(on db: Database) async throws -> Int {
         try await ActivityModel.query(on: db).count()
+    }
+
+    static func move(
+        _ data: MoveActivity,
+        on db: Database
+    ) async throws -> [ActivityModel] {
+        let foundActivities = try await ActivityModel
+            .query(on: db)
+            .group(.or) { or in
+                or.filter(\.$id == data.sourceId).filter(\.$id == data.destinationId)
+            }
+            .all()
+
+        guard foundActivities.count == 2 else { throw AppError.invalid }
+
+        swap(&foundActivities[0].order, &foundActivities[1].order)
+        try await db.transaction { db in
+            try await foundActivities[0].update(on: db)
+            try await foundActivities[1].update(on: db)
+        }
+
+        return data.sourceId == foundActivities[0].id! ? foundActivities : foundActivities.reversed()
     }
 }
 
@@ -85,4 +111,9 @@ struct DeleteActivity: Codable {
     let id: UUID?
     let name: String?
     let color: String?
+}
+
+struct MoveActivity: Codable {
+    let sourceId: UUID
+    let destinationId: UUID
 }
