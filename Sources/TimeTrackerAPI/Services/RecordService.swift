@@ -27,8 +27,7 @@ public class RecordService {
             activity: .init(
                 id: new.activity.id!,
                 name: new.activity.name,
-                color: new.activity.color,
-                order: new.activity.order
+                color: new.activity.color
             ),
             startedAt: new.startedAt,
             endedAt: new.endedAt
@@ -60,8 +59,7 @@ public class RecordService {
                 activity: .init(
                     id: $0.activity.id!,
                     name: $0.activity.name,
-                    color: $0.activity.color,
-                    order: $0.activity.order
+                    color: $0.activity.color
                 ),
                 startedAt: $0.startedAt,
                 endedAt: $0.endedAt
@@ -90,8 +88,7 @@ public class RecordService {
             activity: .init(
                 id: updated.activity.id!,
                 name: updated.activity.name,
-                color: updated.activity.color,
-                order: updated.activity.order
+                color: updated.activity.color
             ),
             startedAt: updated.startedAt,
             endedAt: updated.endedAt
