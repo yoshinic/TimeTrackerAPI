@@ -71,6 +71,7 @@ public class ActivityService {
         }
     }
 
+    @discardableResult
     public func move(
         sourceId: UUID,
         destinationId: UUID
