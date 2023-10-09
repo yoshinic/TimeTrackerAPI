@@ -48,6 +48,17 @@ public class ActivityService {
         return .init(id: updated.id!, name: updated.name, color: updated.color)
     }
 
+    // 与えられた配列の順番通りに order を設定し直す
+    public func updateOrder(ids: [UUID]) async throws {
+        for (i, id) in ids.enumerated() {
+            guard
+                let found = try await ActivityModel.fetch(.init(id: id), on: db).first
+            else { throw AppError.notFound }
+            found.order = i + 1
+            try await found.update(on: db)
+        }
+    }
+
     public func delete(
         id: UUID? = nil,
         name: String? = nil,
@@ -57,28 +68,6 @@ public class ActivityService {
             .init(id: id, name: name, color: color),
             on: db
         )
-
-        let a = try await ActivityModel.fetch(on: db)
-        for o in a.enumerated() {
-            o.element.order = o.offset
-        }
-
-        for (i, e) in a.enumerated() {
-            try await ActivityModel.update(
-                .init(id: e.id!, name: e.name, color: e.color, order: i + 1),
-                on: db
-            )
-        }
-    }
-
-    public func move(ids: [UUID]) async throws {
-        for (i, id) in ids.enumerated() {
-            guard
-                let found = try await ActivityModel.fetch(.init(id: id), on: db).first
-            else { throw AppError.notFound }
-            found.order = i + 1
-            try await found.update(on: db)
-        }
     }
 }
 

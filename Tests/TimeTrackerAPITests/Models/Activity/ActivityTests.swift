@@ -53,7 +53,7 @@ final class ActivityTests: AbstractionXCTestCase {
 
         // move
         let service = ActivityService(db: dbm.database)
-        try await service.move(ids: [founds[1].id!, founds[0].id!])
+        try await service.updateOrder(ids: [founds[1].id!, founds[0].id!])
 
         let moved = try await ActivityModel.fetch(on: dbm.database)
 
