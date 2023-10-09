@@ -5,6 +5,7 @@ public class DefaultServiceFactory {
 
     private let database: Database
 
+    public lazy var category: CategoryService = .init(db: database)
     public lazy var activity: ActivityService = .init(db: database)
     public lazy var record: RecordService = .init(db: database)
 
