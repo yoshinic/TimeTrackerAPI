@@ -9,7 +9,8 @@ extension RecordModel {
         let newRecord = RecordModel(
             activityId: data.activityId,
             startedAt: data.startedAt,
-            endedAt: data.startedAt
+            endedAt: data.startedAt,
+            note: data.note
         )
 
         try await newRecord.create(on: db)
@@ -73,8 +74,15 @@ extension RecordModel {
         if let activityId = data.activityId {
             found.$activity.id = activityId
         }
-        found.startedAt = data.startedAt ?? found.startedAt
-        found.endedAt = data.endedAt ?? found.endedAt
+        if let startedAt = data.startedAt {
+            found.startedAt = startedAt
+        }
+        if let endedAt = data.endedAt {
+            found.endedAt = endedAt
+        }
+        if let note = data.note {
+            found.note = note
+        }
 
         try await found.update(on: db)
 
@@ -91,6 +99,7 @@ struct CreateRecord: Codable {
     let activityId: UUID
     let startedAt: Date
     let endedAt: Date
+    let note: String
 }
 
 struct FetchRecord: Codable {
@@ -108,6 +117,7 @@ struct UpdateRecord: Codable {
     let activityId: UUID?
     let startedAt: Date?
     let endedAt: Date?
+    let note: String?
 }
 
 struct DeleteRecord: Codable {

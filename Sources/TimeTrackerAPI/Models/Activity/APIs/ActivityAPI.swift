@@ -6,7 +6,13 @@ extension ActivityModel {
         _ data: CreateActivity,
         on db: Database
     ) async throws -> ActivityModel {
-        let newActivity = ActivityModel(data.id, name: data.name, color: data.color, order: data.order)
+        let newActivity = ActivityModel(
+            data.id,
+            categoryId: data.categoryId,
+            name: data.name,
+            color: data.color,
+            order: data.order
+        )
         try await newActivity.create(on: db)
         return newActivity
     }
@@ -21,6 +27,9 @@ extension ActivityModel {
                 guard let data = data else { return }
                 if let activityId = data.id {
                     and.filter(\.$id == activityId)
+                }
+                if let categoryId = data.categoryId {
+                    and.filter(\.$category.$id == categoryId)
                 }
                 if let name = data.name {
                     and.filter(\.$name == name)
@@ -47,9 +56,19 @@ extension ActivityModel {
             throw AppError.notFound
         }
 
-        found.name = data.name ?? found.name
-        found.color = data.color ?? found.color
-        found.order = data.order ?? found.order
+        if let categoryId = data.categoryId {
+            found.$category.id = categoryId
+        }
+        if let name = data.name {
+            found.name = name
+        }
+        if let color = data.color {
+            found.color = color
+        }
+        if let order = data.order {
+            found.order = order
+        }
+
         try await found.update(on: db)
         return found
     }
@@ -63,6 +82,9 @@ extension ActivityModel {
             .group(.and) { and in
                 if let activityId = data.id {
                     and.filter(\.$id == activityId)
+                }
+                if let categoryId = data.categoryId {
+                    and.filter(\.$category.$id == categoryId)
                 }
                 if let name = data.name {
                     and.filter(\.$name == name)
@@ -81,18 +103,40 @@ extension ActivityModel {
 
 struct CreateActivity: Codable {
     let id: UUID?
+    let categoryId: UUID
     let name: String
     let color: String
     let order: Int
+
+    init(
+        id: UUID? = nil,
+        categoryId: UUID,
+        name: String,
+        color: String,
+        order: Int
+    ) {
+        self.id = id
+        self.categoryId = categoryId
+        self.name = name
+        self.color = color
+        self.order = order
+    }
 }
 
 struct FetchActivity: Codable {
     let id: UUID?
+    let categoryId: UUID?
     let name: String?
     let color: String?
 
-    init(id: UUID?, name: String? = nil, color: String? = nil) {
+    init(
+        id: UUID?,
+        categoryId: UUID? = nil,
+        name: String? = nil,
+        color: String? = nil
+    ) {
         self.id = id
+        self.categoryId = categoryId
         self.name = name
         self.color = color
     }
@@ -100,12 +144,20 @@ struct FetchActivity: Codable {
 
 struct UpdateActivity: Codable {
     let id: UUID
+    let categoryId: UUID?
     let name: String?
     let color: String?
     let order: Int?
 
-    init(id: UUID, name: String? = nil, color: String? = nil, order: Int? = nil) {
+    init(
+        id: UUID,
+        categoryId: UUID? = nil,
+        name: String? = nil,
+        color: String? = nil,
+        order: Int? = nil
+    ) {
         self.id = id
+        self.categoryId = categoryId
         self.name = name
         self.color = color
         self.order = order
@@ -114,11 +166,18 @@ struct UpdateActivity: Codable {
 
 struct DeleteActivity: Codable {
     let id: UUID?
+    let categoryId: UUID?
     let name: String?
     let color: String?
 
-    init(id: UUID?, name: String? = nil, color: String? = nil) {
+    init(
+        id: UUID?,
+        categoryId: UUID? = nil,
+        name: String? = nil,
+        color: String? = nil
+    ) {
         self.id = id
+        self.categoryId = categoryId
         self.name = name
         self.color = color
     }

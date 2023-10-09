@@ -11,13 +11,15 @@ public class RecordService {
     public func create(
         activityId: UUID,
         startedAt: Date = Date(),
-        endedAt: Date? = nil
+        endedAt: Date? = nil,
+        note: String = ""
     ) async throws -> RecordData {
         let new = try await RecordModel.create(
             .init(
                 activityId: activityId,
                 startedAt: startedAt,
-                endedAt: endedAt ?? Date()
+                endedAt: endedAt ?? Date(),
+                note: note
             ),
             on: db
         )
@@ -26,11 +28,13 @@ public class RecordService {
             id: new.id!,
             activity: .init(
                 id: new.activity.id!,
+                categoryId: new.activity.$category.id,
                 name: new.activity.name,
                 color: new.activity.color
             ),
             startedAt: new.startedAt,
-            endedAt: new.endedAt
+            endedAt: new.endedAt,
+            note: new.note
         )
     }
 
@@ -58,11 +62,13 @@ public class RecordService {
                 id: $0.id!,
                 activity: .init(
                     id: $0.activity.id!,
+                    categoryId: $0.activity.$category.id,
                     name: $0.activity.name,
                     color: $0.activity.color
                 ),
                 startedAt: $0.startedAt,
-                endedAt: $0.endedAt
+                endedAt: $0.endedAt,
+                note: $0.note
             )
         }
     }
@@ -71,14 +77,16 @@ public class RecordService {
         recordId: UUID,
         activityId: UUID? = nil,
         startedAt: Date? = nil,
-        endedAt: Date? = nil
+        endedAt: Date? = nil,
+        note: String? = nil
     ) async throws -> RecordData {
         let updated = try await RecordModel.update(
             .init(
                 recordId: recordId,
                 activityId: activityId,
                 startedAt: startedAt,
-                endedAt: endedAt
+                endedAt: endedAt,
+                note: note
             ),
             on: db
         )
@@ -87,11 +95,13 @@ public class RecordService {
             id: updated.id!,
             activity: .init(
                 id: updated.activity.id!,
+                categoryId: updated.activity.$category.id,
                 name: updated.activity.name,
                 color: updated.activity.color
             ),
             startedAt: updated.startedAt,
-            endedAt: updated.endedAt
+            endedAt: updated.endedAt,
+            note: updated.note
         )
     }
 
@@ -118,11 +128,19 @@ public struct RecordData: Codable, Identifiable {
     public let activity: ActivityData
     public let startedAt: Date
     public let endedAt: Date
+    public let note: String
 
-    public init(id: UUID, activity: ActivityData, startedAt: Date, endedAt: Date) {
+    public init(
+        id: UUID,
+        activity: ActivityData,
+        startedAt: Date,
+        endedAt: Date,
+        note: String
+    ) {
         self.id = id
         self.activity = activity
         self.startedAt = startedAt
         self.endedAt = endedAt
+        self.note = note
     }
 }

@@ -18,13 +18,14 @@ class AbstractionXCTestCase: XCTestCase {
         }
 
         dbm = TestDatabaseManager()
-        try await AllMigrations.v1().prepare(on: dbm.database)
-        try await AllMigrations.seed().prepare(on: dbm.database)
+
+        // dbm = TestDatabaseManager() でインスタンスが作成されるまで待機
+        try await Task.sleep(nanoseconds: 100_000_000)
     }
 
     override func tearDown() async throws {
+        try await AllMigrations.seed().revert(on: dbm.database)
         try await AllMigrations.v1().revert(on: dbm.database)
-        // try await AllMigrations.seed().revert(on: dbm.database)
         try await dbm.shutdown()
         dbm = nil
 

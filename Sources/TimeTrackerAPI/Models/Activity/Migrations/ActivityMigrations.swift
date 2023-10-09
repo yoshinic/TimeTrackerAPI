@@ -7,9 +7,18 @@ enum ActivityMigrations {
                 .schema(ActivityModel.schema)
                 .id()
                 .field(ActivityModel.FieldKeys.v1.name, .string, .required)
+                .field(ActivityModel.FieldKeys.v1.categoryId, .uuid, .required)
                 .field(ActivityModel.FieldKeys.v1.color, .string, .required)
                 .field(ActivityModel.FieldKeys.v1.order, .int, .required)
+
+                .foreignKey(
+                    ActivityModel.FieldKeys.v1.categoryId,
+                    references: CategoryModel.schema,
+                    .id
+                )
+
                 .unique(on: ActivityModel.FieldKeys.v1.name)
+
                 .ignoreExisting()
                 .create()
         }

@@ -11,9 +11,13 @@ final class ActivityTests: AbstractionXCTestCase {
     }
 
     func testCreate() async throws {
+        guard
+            let category = try await CategoryModel.query(on: dbm.database).first()
+        else { throw AppError.notFound }
+
         let name = "study"
         let newActivity = try await ActivityModel.create(
-            .init(id: UUID(), name: name, color: "#000000", order: 1),
+            .init(id: UUID(), categoryId: category.id!, name: name, color: "#000000", order: 1),
             on: dbm.database
         )
 
@@ -30,17 +34,33 @@ final class ActivityTests: AbstractionXCTestCase {
     }
 
     func testMove() async throws {
+        guard
+            let category = try await CategoryModel.query(on: dbm.database).first()
+        else { throw AppError.notFound }
+        
         let n1 = "a"
         let o1 = 1
         try await ActivityModel.create(
-            .init(id: UUID(), name: n1, color: "#000000", order: 1),
+            .init(
+                id: UUID(),
+                categoryId: category.id!,
+                name: n1,
+                color: "#000000",
+                order: 1
+            ),
             on: dbm.database
         )
 
         let n2 = "b"
         let o2 = 2
         try await ActivityModel.create(
-            .init(id: UUID(), name: n2, color: "#000000", order: 2),
+            .init(
+                id: UUID(),
+                categoryId: category.id!,
+                name: n2,
+                color: "#000000",
+                order: 2
+            ),
             on: dbm.database
         )
 

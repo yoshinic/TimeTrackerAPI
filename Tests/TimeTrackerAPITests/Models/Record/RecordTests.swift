@@ -11,14 +11,29 @@ final class RecordTests: AbstractionXCTestCase {
     }
 
     func testCreate() async throws {
+        guard
+            let category = try await CategoryModel.query(on: dbm.database).first()
+        else { throw AppError.notFound }
+        
         let name = "sample"
         let newActivity = try await ActivityModel.create(
-            .init(id: UUID(), name: name, color: "#000000", order: 1),
+            .init(
+                id: UUID(),
+                categoryId: category.id!,
+                name: name,
+                color: "#000000",
+                order: 1
+            ),
             on: dbm.database
         )
 
         let newRecord = try await RecordModel.create(
-            .init(activityId: newActivity.id!, startedAt: Date(), endedAt: Date()),
+            .init(
+                activityId: newActivity.id!,
+                startedAt: Date(),
+                endedAt: Date(),
+                note: ""
+            ),
             on: dbm.database
         )
 
