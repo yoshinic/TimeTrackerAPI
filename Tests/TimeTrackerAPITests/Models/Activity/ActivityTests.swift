@@ -51,12 +51,13 @@ final class ActivityTests: AbstractionXCTestCase {
         XCTAssertTrue(founds[0].name == n1 && founds[0].order == o1)
         XCTAssertTrue(founds[1].name == n2 && founds[1].order == o2)
 
-        let movedActivities = try await ActivityModel.move(
-            .init(sourceId: founds[0].id!, destinationId: founds[1].id!),
-            on: dbm.database
-        )
+        // move
+        let service = ActivityService(db: dbm.database)
+        try await service.move(ids: [founds[1].id!, founds[0].id!])
 
-        XCTAssertTrue(movedActivities[0].name == n1 && movedActivities[0].order == o2)
-        XCTAssertTrue(movedActivities[1].name == n2 && movedActivities[1].order == o1)
+        let moved = try await ActivityModel.fetch(on: dbm.database)
+
+        XCTAssertTrue(moved[0].name == n2 && moved[0].order == o1)
+        XCTAssertTrue(moved[1].name == n1 && moved[1].order == o2)
     }
 }

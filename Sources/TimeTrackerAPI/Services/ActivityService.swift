@@ -71,17 +71,13 @@ public class ActivityService {
         }
     }
 
-    @discardableResult
-    public func move(
-        sourceId: UUID,
-        destinationId: UUID
-    ) async throws -> [ActivityData] {
-        let a = try await ActivityModel.move(
-            .init(sourceId: sourceId, destinationId: destinationId),
-            on: db
-        )
-        return a.map {
-            .init(id: $0.id!, name: $0.name, color: $0.color)
+    public func move(ids: [UUID]) async throws {
+        for (i, id) in ids.enumerated() {
+            guard
+                let found = try await ActivityModel.fetch(.init(id: id), on: db).first
+            else { throw AppError.notFound }
+            found.order = i + 1
+            try await found.update(on: db)
         }
     }
 }
