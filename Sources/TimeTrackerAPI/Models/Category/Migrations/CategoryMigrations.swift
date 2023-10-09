@@ -20,7 +20,7 @@ enum CategoryMigrations {
     }
 
     struct seed: AsyncMigration {
-        let names = ["語学", "運動"]
+        let names = ["未登録", "語学", "運動"]
 
         func prepare(on db: Database) async throws {
             for (i, name) in names.enumerated() {
