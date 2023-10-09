@@ -58,7 +58,20 @@ extension ActivityModel {
         _ data: DeleteActivity,
         on db: Database
     ) async throws {
-        try await ActivityModel.query(on: db).delete()
+        try await ActivityModel
+            .query(on: db)
+            .group(.and) { and in
+                if let activityId = data.id {
+                    and.filter(\.$id == activityId)
+                }
+                if let name = data.name {
+                    and.filter(\.$name == name)
+                }
+                if let color = data.color {
+                    and.filter(\.$color == color)
+                }
+            }
+            .delete()
     }
 
     static func count(on db: Database) async throws -> Int {
@@ -77,7 +90,7 @@ struct FetchActivity: Codable {
     let id: UUID?
     let name: String?
     let color: String?
-    
+
     init(id: UUID?, name: String? = nil, color: String? = nil) {
         self.id = id
         self.name = name
@@ -90,15 +103,23 @@ struct UpdateActivity: Codable {
     let name: String?
     let color: String?
     let order: Int?
+
+    init(id: UUID, name: String? = nil, color: String? = nil, order: Int? = nil) {
+        self.id = id
+        self.name = name
+        self.color = color
+        self.order = order
+    }
 }
 
 struct DeleteActivity: Codable {
     let id: UUID?
     let name: String?
     let color: String?
-}
 
-struct MoveActivity: Codable {
-    let sourceId: UUID
-    let destinationId: UUID
+    init(id: UUID?, name: String? = nil, color: String? = nil) {
+        self.id = id
+        self.name = name
+        self.color = color
+    }
 }

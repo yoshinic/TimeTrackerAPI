@@ -39,10 +39,11 @@ public class ActivityService {
     public func update(
         id: UUID,
         name: String? = nil,
-        color: String? = nil
+        color: String? = nil,
+        order: Int? = nil
     ) async throws -> ActivityData {
         let updated = try await ActivityModel.update(
-            .init(id: id, name: name, color: color, order: nil),
+            .init(id: id, name: name, color: color, order: order),
             on: db
         )
         return .init(id: updated.id!, name: updated.name, color: updated.color)
@@ -51,11 +52,7 @@ public class ActivityService {
     // 与えられた配列の順番通りに order を設定し直す
     public func updateOrder(ids: [UUID]) async throws {
         for (i, id) in ids.enumerated() {
-            guard
-                let found = try await ActivityModel.fetch(.init(id: id), on: db).first
-            else { throw AppError.notFound }
-            found.order = i + 1
-            try await found.update(on: db)
+            try await update(id: id, order: i + 1)
         }
     }
 
