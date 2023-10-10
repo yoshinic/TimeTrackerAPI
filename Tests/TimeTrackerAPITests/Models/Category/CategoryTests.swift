@@ -12,14 +12,15 @@ final class CategoryTests: AbstractionXCTestCase {
 
     func testCreate() async throws {
         let service: CategoryService = .init(db: dbm.database)
-        
+
         try await service.delete()
-        
+
         let name = "語学"
-        let new = try await service.create(name: name)
+        let color = "#FFFFFF"
+        let new = try await service.create(name: name, color: color)
 
         guard
-            let found = try await service.fetch(name: name).first
+            let found = try await service.fetch(name: name, color: color).first
         else {
             return  XCTFail("")
         }

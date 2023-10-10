@@ -7,6 +7,7 @@ enum CategoryMigrations {
                 .schema(CategoryModel.schema)
                 .id()
                 .field(CategoryModel.FieldKeys.v1.name, .string, .required)
+                .field(CategoryModel.FieldKeys.v1.color, .string, .required)
                 .field(CategoryModel.FieldKeys.v1.order, .int, .required)
 
                 .unique(on: CategoryModel.FieldKeys.v1.name)
@@ -20,20 +21,24 @@ enum CategoryMigrations {
     }
 
     struct seed: AsyncMigration {
-        let names = ["未登録", "語学", "運動"]
+        private let data: [CategoryTempData] = [
+            ("未登録", "#FFFFFF"), ("語学", "#FF0000"), ("運動", "#00FF00"),
+        ]
 
         func prepare(on db: Database) async throws {
-            for (i, name) in names.enumerated() {
-                let new = CategoryModel(name: name, order: i + 1)
+            for (i, e) in data.enumerated() {
+                let new = CategoryModel(name: e.name, color: e.color, order: i + 1)
                 try await new.create(on: db)
             }
         }
 
         func revert(on db: Database) async throws {
 //            let service = CategoryService(db: db)
-//            for name in names.reversed() {
-//                try await service.delete(name: name)
+//            for e in data.reversed() {
+//                try await service.delete(name: e.name)
 //            }
         }
     }
 }
+
+private typealias CategoryTempData = (name: String, color: String)

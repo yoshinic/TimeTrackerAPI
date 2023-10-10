@@ -9,7 +9,11 @@ extension CategoryModel {
     ) async throws -> CategoryModel? {
         let founds = try await fetch(.init(name: data.name), on: db)
         guard founds.first == nil else { return nil }
-        let newCategory = CategoryModel(name: data.name, order: data.order)
+        let newCategory = CategoryModel(
+            name: data.name,
+            color: data.color,
+            order: data.order
+        )
         try await newCategory.create(on: db)
 
         return newCategory
@@ -29,7 +33,11 @@ extension CategoryModel {
                 if let name = data.name {
                     and.filter(\.$name == name)
                 }
+                if let color = data.color {
+                    and.filter(\.$color == color)
+                }
             }
+            .sort(\.$order)
             .all()
     }
 
@@ -49,6 +57,9 @@ extension CategoryModel {
 
         if let name = data.name {
             found.name = name
+        }
+        if let color = data.color {
+            found.color = color
         }
         if let order = data.order {
             found.order = order
@@ -72,6 +83,9 @@ extension CategoryModel {
                 if let name = data.name {
                     and.filter(\.$name == name)
                 }
+                if let color = data.color {
+                    and.filter(\.$color == color)
+                }
             }
             .delete()
     }
@@ -84,11 +98,18 @@ extension CategoryModel {
 struct CreateCategory: Codable {
     let id: UUID?
     let name: String
+    let color: String
     let order: Int
 
-    init(id: UUID? = nil, name: String, order: Int) {
+    init(
+        id: UUID? = nil,
+        name: String,
+        color: String,
+        order: Int
+    ) {
         self.id = id
         self.name = name
+        self.color = color
         self.order = order
     }
 }
@@ -96,25 +117,34 @@ struct CreateCategory: Codable {
 struct FetchCategory: Codable {
     let id: UUID?
     let name: String?
+    let color: String?
 
-    init(id: UUID? = nil, name: String? = nil) {
+    init(
+        id: UUID? = nil,
+        name: String? = nil,
+        color: String? = nil
+    ) {
         self.id = id
         self.name = name
+        self.color = color
     }
 }
 
 struct UpdateCategory: Codable {
     let id: UUID
     let name: String?
+    let color: String?
     let order: Int?
 
     init(
         id: UUID,
         name: String? = nil,
+        color: String? = nil,
         order: Int? = nil
     ) {
         self.id = id
         self.name = name
+        self.color = color
         self.order = order
     }
 }
@@ -122,4 +152,15 @@ struct UpdateCategory: Codable {
 struct DeleteCategory: Codable {
     let id: UUID?
     let name: String?
+    let color: String?
+
+    init(
+        id: UUID?,
+        name: String? = nil,
+        color: String? = nil
+    ) {
+        self.id = id
+        self.name = name
+        self.color = color
+    }
 }

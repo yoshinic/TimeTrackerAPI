@@ -42,11 +42,21 @@ public class ActivityService {
         color: String? = nil
     ) async throws -> [ActivityData] {
         let a = try await ActivityModel.fetch(
-            .init(id: id, categoryId: categoryId, name: name, color: color),
+            .init(
+                id: id,
+                categoryId: categoryId,
+                name: name,
+                color: color
+            ),
             on: db
         )
         return a.map {
-            .init(id: $0.id!, categoryId: $0.$category.id, name: $0.name, color: $0.color)
+            .init(
+                id: $0.id!,
+                categoryId: $0.$category.id,
+                name: $0.name,
+                color: $0.color
+            )
         }
     }
 

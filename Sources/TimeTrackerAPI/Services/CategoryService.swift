@@ -10,28 +10,39 @@ public class CategoryService {
     @discardableResult
     public func create(
         id: UUID? = nil,
-        name: String
+        name: String,
+        color: String
     ) async throws -> CategoryData {
         let order = try await CategoryModel.count(on: db) + 1
         guard
             let new = try await CategoryModel.create(
-                .init(id: id, name: name, order: order),
+                .init(
+                    id: id,
+                    name: name,
+                    color: color,
+                    order: order
+                ),
                 on: db
             )
         else { throw AppError.duplicate }
-        return .init(id: new.id!, name: new.name)
+        return .init(
+            id: new.id!,
+            name: new.name,
+            color: new.color
+        )
     }
 
     public func fetch(
         id: UUID? = nil,
-        name: String? = nil
+        name: String? = nil,
+        color: String? = nil
     ) async throws -> [CategoryData] {
         let a = try await CategoryModel.fetch(
-            .init(id: id, name: name),
+            .init(id: id, name: name, color: color),
             on: db
         )
         return a.map {
-            .init(id: $0.id!, name: $0.name)
+            .init(id: $0.id!, name: $0.name, color: $0.color)
         }
     }
 
@@ -39,19 +50,22 @@ public class CategoryService {
     public func update(
         id: UUID,
         name: String? = nil,
+        color: String? = nil,
         order: Int? = nil
     ) async throws -> CategoryData {
         let updated = try await CategoryModel.update(
             .init(
                 id: id,
                 name: name,
+                color: color,
                 order: order
             ),
             on: db
         )
         return .init(
             id: updated.id!,
-            name: updated.name
+            name: updated.name,
+            color: updated.color
         )
     }
 
@@ -64,18 +78,24 @@ public class CategoryService {
 
     public func delete(
         id: UUID? = nil,
-        name: String? = nil
+        name: String? = nil,
+        color: String? = nil
     ) async throws {
-        try await CategoryModel.delete(.init(id: id, name: name), on: db)
+        try await CategoryModel.delete(
+            .init(id: id, name: name, color: color),
+            on: db
+        )
     }
 }
 
 public struct CategoryData: Codable, Identifiable {
     public let id: UUID
     public let name: String
+    public let color: String
 
-    public init(id: UUID, name: String) {
+    public init(id: UUID, name: String, color: String) {
         self.id = id
         self.name = name
+        self.color = color
     }
 }
