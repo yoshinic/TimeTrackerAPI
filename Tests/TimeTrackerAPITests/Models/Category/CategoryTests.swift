@@ -12,7 +12,6 @@ final class CategoryTests: AbstractionXCTestCase {
 
     func testCreate() async throws {
         let service: CategoryService = .init(db: dbm.database)
-
         try await service.delete()
 
         let name = "語学"
@@ -26,5 +25,28 @@ final class CategoryTests: AbstractionXCTestCase {
         }
 
         XCTAssertTrue(new.name == found.name)
+    }
+
+    func testToData() async throws {
+        let service: CategoryService = .init(db: dbm.database)
+        try await service.delete()
+
+        let name = "sample"
+        let color = "#FFFFFF"
+        let new = try await service.create(name: name, color: color)
+
+        guard
+            let category = try await CategoryModel
+            .create(
+                .init(name: name, color: color, order: 1),
+                on: dbm.database
+            )
+        else {
+            XCTAssertThrowsError("invalid")
+            return
+        }
+
+        let data = category.toData
+        XCTAssertTrue(new.name == data.name && new.color == data.color)
     }
 }

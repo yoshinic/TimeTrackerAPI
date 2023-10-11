@@ -37,7 +37,7 @@ final class ActivityTests: AbstractionXCTestCase {
         guard
             let category = try await CategoryModel.query(on: dbm.database).first()
         else { throw AppError.notFound }
-        
+
         let n1 = "a"
         let o1 = 1
         try await ActivityModel.create(
@@ -46,7 +46,7 @@ final class ActivityTests: AbstractionXCTestCase {
                 categoryId: category.id!,
                 name: n1,
                 color: "#000000",
-                order: 1
+                order: o1
             ),
             on: dbm.database
         )
@@ -59,7 +59,7 @@ final class ActivityTests: AbstractionXCTestCase {
                 categoryId: category.id!,
                 name: n2,
                 color: "#000000",
-                order: 2
+                order: o2
             ),
             on: dbm.database
         )
@@ -79,5 +79,50 @@ final class ActivityTests: AbstractionXCTestCase {
 
         XCTAssertTrue(moved[0].name == n2 && moved[0].order == o1)
         XCTAssertTrue(moved[1].name == n1 && moved[1].order == o2)
+    }
+
+    func testToData() async throws {
+        guard
+            let category = try await CategoryModel.query(on: dbm.database).first()
+        else { throw AppError.notFound }
+
+        let name = "a"
+        let color = "#000000"
+        let service = ActivityService(db: dbm.database)
+        let new = try await service.create(
+            categoryId: category.id!,
+            name: name,
+            color: color
+        )
+
+        XCTAssertTrue(
+            new.name == name
+                && new.color == color
+                && new.category.name == category.name
+        )
+    }
+
+    func testFetchEagerLoad() async throws {
+        guard
+            let category = try await CategoryModel.query(on: dbm.database).first()
+        else { throw AppError.notFound }
+
+        let name = "a"
+        let color = "#000000"
+        try await ActivityModel.create(
+            .init(
+                categoryId: category.id!,
+                name: name,
+                color: color,
+                order: 1
+            ),
+            on: dbm.database
+        )
+
+        let found = try await ActivityModel
+            .fetch(.init(categoryId: category.id!), on: dbm.database)
+
+        XCTAssertTrue(found.count == 1)
+        XCTAssertTrue(found[0].$category.wrappedValue.name == category.name)
     }
 }

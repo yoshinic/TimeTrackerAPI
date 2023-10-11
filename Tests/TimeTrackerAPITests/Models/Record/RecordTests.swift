@@ -60,4 +60,34 @@ final class RecordTests: AbstractionXCTestCase {
         XCTAssertTrue(newRecord.startedAt == found.startedAt)
         XCTAssertTrue(newRecord.endedAt == found.endedAt)
     }
+    
+    func testToData() async throws {
+        guard
+            let category = try await CategoryModel.query(on: dbm.database).first()
+        else { throw AppError.notFound }
+
+        let name = "a"
+        let color = "#000000"
+        let activityService = ActivityService(db: dbm.database)
+        let activity = try await activityService.create(
+            categoryId: category.id!,
+            name: name,
+            color: color
+        )
+        
+        let note = "zzz"
+        let recordService = RecordService(db: dbm.database)
+        let new = try await recordService.create(
+            activityId: activity.id,
+            startedAt: Date(),
+            endedAt: Date(),
+            note: note
+        )
+
+        XCTAssertTrue(
+            new.note == note
+            && new.activity.name == name
+            && new.activity.category.name == category.name
+        )
+    }
 }

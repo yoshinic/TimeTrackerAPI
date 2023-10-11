@@ -14,7 +14,7 @@ extension RecordModel {
         )
 
         try await newRecord.create(on: db)
-
+        try await eagerLoad(to: newRecord, on: db)
         return newRecord
     }
 
@@ -55,6 +55,7 @@ extension RecordModel {
                 }
             }
             .all()
+            .map { try assignJoinedActivity(to: $0) }
     }
 
     static func update(
@@ -85,7 +86,7 @@ extension RecordModel {
         }
 
         try await found.update(on: db)
-
+        try await eagerLoad(to: found, on: db)
         return found
     }
 
@@ -93,6 +94,25 @@ extension RecordModel {
         _ data: DeleteRecord? = nil,
         on db: Database
     ) async throws {}
+
+    @discardableResult
+    static func assignJoinedActivity(
+        to record: RecordModel
+    ) throws -> RecordModel  {
+        record.$activity.value = try record.joined(ActivityModel.self)
+        try ActivityModel.assignJoinedCategory(to: record.$activity.value!)
+        return record
+    }
+    
+    @discardableResult
+    static func eagerLoad(
+        to record: RecordModel,
+        on db: Database
+    ) async throws -> RecordModel  {
+        try await record.$activity.load(on: db)
+        try await record.activity.$category.load(on: db)
+        return record
+    }
 }
 
 struct CreateRecord: Codable {

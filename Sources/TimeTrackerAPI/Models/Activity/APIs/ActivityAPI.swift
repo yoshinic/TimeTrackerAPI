@@ -14,6 +14,7 @@ extension ActivityModel {
             order: data.order
         )
         try await newActivity.create(on: db)
+        try await newActivity.$category.load(on: db)
         return newActivity
     }
 
@@ -23,6 +24,7 @@ extension ActivityModel {
     ) async throws -> [ActivityModel] {
         try await ActivityModel
             .query(on: db)
+            .join(parent: \.$category)
             .group { and in
                 guard let data = data else { return }
                 if let activityId = data.id {
@@ -40,6 +42,7 @@ extension ActivityModel {
             }
             .sort(\.$order)
             .all()
+            .map { try assignJoinedCategory(to: $0) }
     }
 
     @discardableResult
@@ -50,6 +53,7 @@ extension ActivityModel {
         guard
             let found = try await ActivityModel
             .query(on: db)
+            .join(parent: \.$category)
             .filter(\.$id == data.id)
             .first()
         else {
@@ -70,6 +74,7 @@ extension ActivityModel {
         }
 
         try await found.update(on: db)
+        try await found.$category.load(on: db)
         return found
     }
 
@@ -79,6 +84,7 @@ extension ActivityModel {
     ) async throws {
         try await ActivityModel
             .query(on: db)
+            .join(parent: \.$category)
             .group(.and) { and in
                 if let activityId = data.id {
                     and.filter(\.$id == activityId)
@@ -98,6 +104,14 @@ extension ActivityModel {
 
     static func count(on db: Database) async throws -> Int {
         try await ActivityModel.query(on: db).count()
+    }
+
+    @discardableResult
+    static func assignJoinedCategory(
+        to activity: ActivityModel
+    ) throws -> ActivityModel  {
+        activity.$category.value = try activity.joined(CategoryModel.self)
+        return activity
     }
 }
 
@@ -130,7 +144,7 @@ struct FetchActivity: Codable {
     let color: String?
 
     init(
-        id: UUID?,
+        id: UUID? = nil,
         categoryId: UUID? = nil,
         name: String? = nil,
         color: String? = nil

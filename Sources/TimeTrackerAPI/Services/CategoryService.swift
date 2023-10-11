@@ -13,22 +13,22 @@ public class CategoryService {
         name: String,
         color: String
     ) async throws -> CategoryData {
-        let order = try await CategoryModel.count(on: db) + 1
         guard
-            let new = try await CategoryModel.create(
+            let category = try await CategoryModel.create(
                 .init(
                     id: id,
                     name: name,
                     color: color,
-                    order: order
+                    order: await CategoryModel.count(on: db) + 1
                 ),
                 on: db
             )
         else { throw AppError.duplicate }
         return .init(
-            id: new.id!,
-            name: new.name,
-            color: new.color
+            id: category.id!,
+            name: category.name,
+            color: category.color,
+            order: category.order
         )
     }
 
@@ -42,7 +42,12 @@ public class CategoryService {
             on: db
         )
         return a.map {
-            .init(id: $0.id!, name: $0.name, color: $0.color)
+            .init(
+                id: $0.id!,
+                name: $0.name,
+                color: $0.color,
+                order: $0.order
+            )
         }
     }
 
@@ -65,7 +70,8 @@ public class CategoryService {
         return .init(
             id: updated.id!,
             name: updated.name,
-            color: updated.color
+            color: updated.color,
+            order: updated.order
         )
     }
 
@@ -92,10 +98,28 @@ public struct CategoryData: Codable, Identifiable {
     public let id: UUID
     public let name: String
     public let color: String
+    public let order: Int
 
-    public init(id: UUID, name: String, color: String) {
+    public init(
+        id: UUID,
+        name: String,
+        color: String,
+        order: Int
+    ) {
         self.id = id
         self.name = name
         self.color = color
+        self.order = order
+    }
+}
+
+extension CategoryModel {
+    var toData: CategoryData {
+        CategoryData(
+            id: self.id!,
+            name: self.name,
+            color: self.color,
+            order: self.order
+        )
     }
 }

@@ -8,15 +8,22 @@ extension CategoryModel {
         on db: Database
     ) async throws -> CategoryModel? {
         let founds = try await fetch(.init(name: data.name), on: db)
-        guard founds.first == nil else { return nil }
-        let newCategory = CategoryModel(
-            name: data.name,
-            color: data.color,
-            order: data.order
-        )
-        try await newCategory.create(on: db)
 
-        return newCategory
+        switch founds.count {
+        case 0:
+            let newCategory = CategoryModel(
+                name: data.name,
+                color: data.color,
+                order: data.order
+            )
+            try await newCategory.create(on: db)
+
+            return newCategory
+        case 1:
+            return founds[0]
+        default:
+            throw AppError.duplicate
+        }
     }
 
     static func fetch(

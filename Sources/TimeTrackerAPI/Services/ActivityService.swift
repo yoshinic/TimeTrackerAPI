@@ -2,9 +2,11 @@ import FluentKit
 
 public class ActivityService {
     private let db: Database
+    private let categoryService: CategoryService
 
     init(db: Database) {
         self.db = db
+        self.categoryService = .init(db: self.db)
     }
 
     @discardableResult
@@ -15,23 +17,17 @@ public class ActivityService {
         color: String
     ) async throws -> ActivityData {
         try await db.transaction { db in
-            let order = try await ActivityModel.count(on: db) + 1
             let new = try await ActivityModel.create(
                 .init(
                     id: id,
                     categoryId: categoryId,
                     name: name,
                     color: color,
-                    order: order
+                    order: await ActivityModel.count(on: db) + 1
                 ),
                 on: db
             )
-            return .init(
-                id: new.id!,
-                categoryId: new.$category.id,
-                name: new.name,
-                color: new.color
-            )
+            return new.toData
         }
     }
 
@@ -50,14 +46,7 @@ public class ActivityService {
             ),
             on: db
         )
-        return a.map {
-            .init(
-                id: $0.id!,
-                categoryId: $0.$category.id,
-                name: $0.name,
-                color: $0.color
-            )
-        }
+        return a.map { $0.toData }
     }
 
     @discardableResult
@@ -78,12 +67,7 @@ public class ActivityService {
             ),
             on: db
         )
-        return .init(
-            id: updated.id!,
-            categoryId: updated.$category.id,
-            name: updated.name,
-            color: updated.color
-        )
+        return updated.toData
     }
 
     // 与えられた配列の順番通りに order を設定し直す
@@ -107,14 +91,34 @@ public class ActivityService {
 
 public struct ActivityData: Codable, Identifiable {
     public let id: UUID
-    public let categoryId: UUID
+    public let category: CategoryData
     public let name: String
     public let color: String
+    public let order: Int
 
-    public init(id: UUID, categoryId: UUID, name: String, color: String) {
+    public init(
+        id: UUID,
+        category: CategoryData,
+        name: String,
+        color: String,
+        order: Int
+    ) {
         self.id = id
-        self.categoryId = categoryId
+        self.category = category
         self.name = name
         self.color = color
+        self.order = order
+    }
+}
+
+extension ActivityModel {
+    var toData: ActivityData {
+        ActivityData(
+            id: self.id!,
+            category: self.$category.wrappedValue.toData,
+            name: self.name,
+            color: self.color,
+            order: self.order
+        )
     }
 }

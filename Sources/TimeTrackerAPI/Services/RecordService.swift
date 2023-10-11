@@ -24,18 +24,7 @@ public class RecordService {
             on: db
         )
 
-        return .init(
-            id: new.id!,
-            activity: .init(
-                id: new.activity.id!,
-                categoryId: new.activity.$category.id,
-                name: new.activity.name,
-                color: new.activity.color
-            ),
-            startedAt: new.startedAt,
-            endedAt: new.endedAt,
-            note: new.note
-        )
+        return new.toData
     }
 
     public func fetch(
@@ -57,20 +46,7 @@ public class RecordService {
             ),
             on: db
         )
-        return a.map {
-            .init(
-                id: $0.id!,
-                activity: .init(
-                    id: $0.activity.id!,
-                    categoryId: $0.activity.$category.id,
-                    name: $0.activity.name,
-                    color: $0.activity.color
-                ),
-                startedAt: $0.startedAt,
-                endedAt: $0.endedAt,
-                note: $0.note
-            )
-        }
+        return a.map { $0.toData }
     }
 
     public func update(
@@ -91,18 +67,7 @@ public class RecordService {
             on: db
         )
 
-        return .init(
-            id: updated.id!,
-            activity: .init(
-                id: updated.activity.id!,
-                categoryId: updated.activity.$category.id,
-                name: updated.activity.name,
-                color: updated.activity.color
-            ),
-            startedAt: updated.startedAt,
-            endedAt: updated.endedAt,
-            note: updated.note
-        )
+        return updated.toData
     }
 
     public func delete(
@@ -142,5 +107,17 @@ public struct RecordData: Codable, Identifiable {
         self.startedAt = startedAt
         self.endedAt = endedAt
         self.note = note
+    }
+}
+
+extension RecordModel {
+    var toData: RecordData {
+        RecordData(
+            id: self.id!,
+            activity: self.$activity.wrappedValue.toData,
+            startedAt: self.startedAt,
+            endedAt: self.endedAt,
+            note: self.note
+        )
     }
 }
