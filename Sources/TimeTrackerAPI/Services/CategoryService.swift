@@ -92,6 +92,10 @@ public class CategoryService {
             on: db
         )
     }
+
+    public func `default`() async throws -> CategoryData? {
+        try await CategoryModel.default(on: db)?.toData
+    }
 }
 
 public struct CategoryData: Codable, Identifiable {

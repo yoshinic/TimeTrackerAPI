@@ -11,6 +11,7 @@ enum CategoryMigrations {
                 .field(CategoryModel.FieldKeys.v1.order, .int, .required)
 
                 .unique(on: CategoryModel.FieldKeys.v1.name)
+                .unique(on: CategoryModel.FieldKeys.v1.order)
                 .ignoreExisting()
                 .create()
         }
@@ -21,13 +22,20 @@ enum CategoryMigrations {
     }
 
     struct seed: AsyncMigration {
-        private let data: [CategoryTempData] = [
-            ("未登録", "#FFFFFF"), ("語学", "#FF0000"), ("運動", "#00FF00"),
+        private let data: [CategoryData] = [
+            CategoryModel.default,
+            .init(id: UUID(), name: "語学", color: "#FF0000", order: 2),
+            .init(id: UUID(), name: "運動", color: "00FF00", order: 3),
         ]
 
         func prepare(on db: Database) async throws {
-            for (i, e) in data.enumerated() {
-                let new = CategoryModel(name: e.name, color: e.color, order: i + 1)
+            for e in data {
+                let new = CategoryModel(
+                    e.id,
+                    name: e.name,
+                    color: e.color,
+                    order: e.order
+                )
                 try await new.create(on: db)
             }
         }
@@ -40,5 +48,3 @@ enum CategoryMigrations {
         }
     }
 }
-
-private typealias CategoryTempData = (name: String, color: String)

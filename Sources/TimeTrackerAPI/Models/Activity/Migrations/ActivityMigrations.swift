@@ -18,6 +18,7 @@ enum ActivityMigrations {
                 )
 
                 .unique(on: ActivityModel.FieldKeys.v1.name)
+                .unique(on: ActivityModel.FieldKeys.v1.order)
 
                 .ignoreExisting()
                 .create()

@@ -4,6 +4,13 @@ import Fluent
 final class CategoryModel: Model {
     static let schema = "categories"
 
+    static let `default`: CategoryData = .init(
+        id: UUID(),
+        name: "未登録",
+        color: "#FFFFFF",
+        order: 1
+    )
+
     enum FieldKeys {
         enum v1 {
             static var name: FieldKey { "name" }
