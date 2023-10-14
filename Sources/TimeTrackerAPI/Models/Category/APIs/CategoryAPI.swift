@@ -100,12 +100,6 @@ extension CategoryModel {
     static func count(on db: Database) async throws -> Int {
         try await CategoryModel.query(on: db).count()
     }
-
-    static func `default`(on db: Database) async throws -> CategoryModel? {
-        try await CategoryModel
-            .fetch(.init(id: CategoryModel.default.id), on: db)
-            .first
-    }
 }
 
 struct CreateCategory: Codable {

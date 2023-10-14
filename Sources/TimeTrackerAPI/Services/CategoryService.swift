@@ -1,6 +1,8 @@
 import FluentKit
 
 public class CategoryService {
+    public static let defaultId: UUID = CategoryModel.defaultId
+
     private let db: Database
 
     init(db: Database) {
@@ -91,10 +93,6 @@ public class CategoryService {
             .init(id: id, name: name, color: color),
             on: db
         )
-    }
-
-    public func `default`() async throws -> CategoryData? {
-        try await CategoryModel.default(on: db)?.toData
     }
 }
 

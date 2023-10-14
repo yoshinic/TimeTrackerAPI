@@ -23,7 +23,7 @@ enum CategoryMigrations {
 
     struct seed: AsyncMigration {
         private let data: [CategoryData] = [
-            CategoryModel.default,
+            .init(id: CategoryModel.defaultId, name: "未登録", color: "#FFFFFF", order: 1),
             .init(id: UUID(), name: "語学", color: "#FF0000", order: 2),
             .init(id: UUID(), name: "運動", color: "00FF00", order: 3),
         ]
