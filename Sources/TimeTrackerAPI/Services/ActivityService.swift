@@ -1,6 +1,8 @@
 import FluentKit
 
 public class ActivityService {
+    public static let defaultId: UUID = ActivityModel.defaultId
+    
     private let db: Database
     private let categoryService: CategoryService
 
