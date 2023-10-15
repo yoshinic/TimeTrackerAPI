@@ -12,9 +12,8 @@ final class CategoryTests: AbstractionXCTestCase {
 
     func testCreate() async throws {
         let service: CategoryService = .init(db: dbm.database)
-        try await service.delete()
 
-        let name = "語学"
+        let name = "sample"
         let color = "#FFFFFF"
         let new = try await service.create(name: name, color: color)
 
@@ -29,7 +28,6 @@ final class CategoryTests: AbstractionXCTestCase {
 
     func testToData() async throws {
         let service: CategoryService = .init(db: dbm.database)
-        try await service.delete()
 
         let name = "sample"
         let color = "#FFFFFF"
@@ -38,7 +36,7 @@ final class CategoryTests: AbstractionXCTestCase {
         guard
             let category = try await CategoryModel
             .create(
-                .init(name: name, color: color, order: 1),
+                .init(name: name, color: color, order: 10),
                 on: dbm.database
             )
         else {

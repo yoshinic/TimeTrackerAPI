@@ -38,9 +38,11 @@ final class ActivityTests: AbstractionXCTestCase {
             let category = try await CategoryModel.query(on: dbm.database).first()
         else { throw AppError.notFound }
 
-        let n1 = "a"
+        let a = try await ActivityModel.fetch(on: dbm.database)
+
+        let n1 = "sample1"
         let o1 = 1
-        try await ActivityModel.create(
+        let new1 = try await ActivityModel.create(
             .init(
                 id: UUID(),
                 categoryId: category.id!,
@@ -51,9 +53,9 @@ final class ActivityTests: AbstractionXCTestCase {
             on: dbm.database
         )
 
-        let n2 = "b"
+        let n2 = "sample2"
         let o2 = 2
-        try await ActivityModel.create(
+        let new2 = try await ActivityModel.create(
             .init(
                 id: UUID(),
                 categoryId: category.id!,
@@ -66,19 +68,27 @@ final class ActivityTests: AbstractionXCTestCase {
 
         let founds = try await ActivityModel.fetch(on: dbm.database)
 
-        guard founds.count == 2 else { return  XCTFail("") }
+        guard founds.count - a.count == 2 else { return  XCTFail("") }
+        guard
+            let found1 = founds.first(where: { $0.id == new1.id }),
+            let found2 = founds.first(where: { $0.id == new2.id })
+        else { return  XCTFail("")  }
 
-        XCTAssertTrue(founds[0].name == n1 && founds[0].order == o1)
-        XCTAssertTrue(founds[1].name == n2 && founds[1].order == o2)
+        XCTAssertTrue(found1.name == n1 && found1.order == o1)
+        XCTAssertTrue(found2.name == n2 && found2.order == o2)
 
         // move
         let service = ActivityService(db: dbm.database)
         try await service.updateOrder(ids: [founds[1].id!, founds[0].id!])
 
         let moved = try await ActivityModel.fetch(on: dbm.database)
-
-        XCTAssertTrue(moved[0].name == n2 && moved[0].order == o1)
-        XCTAssertTrue(moved[1].name == n1 && moved[1].order == o2)
+        guard
+            let moved1 = moved.first(where: { $0.id == new1.id }),
+            let moved2 = moved.first(where: { $0.id == new2.id })
+        else { return  XCTFail("")  }
+        
+        XCTAssertTrue(moved1.name == n2 && moved1.order == o1)
+        XCTAssertTrue(moved2.name == n1 && moved2.order == o2)
     }
 
     func testToData() async throws {
@@ -107,7 +117,10 @@ final class ActivityTests: AbstractionXCTestCase {
             let category = try await CategoryModel.query(on: dbm.database).first()
         else { throw AppError.notFound }
 
-        let name = "a"
+        let a = try await ActivityModel
+            .fetch(.init(categoryId: category.id!), on: dbm.database)
+
+        let name = "sample"
         let color = "#000000"
         try await ActivityModel.create(
             .init(
@@ -122,7 +135,7 @@ final class ActivityTests: AbstractionXCTestCase {
         let found = try await ActivityModel
             .fetch(.init(categoryId: category.id!), on: dbm.database)
 
-        XCTAssertTrue(found.count == 1)
+        XCTAssertTrue(found.count - a.count == 1)
         XCTAssertTrue(found[0].$category.wrappedValue.name == category.name)
     }
 }

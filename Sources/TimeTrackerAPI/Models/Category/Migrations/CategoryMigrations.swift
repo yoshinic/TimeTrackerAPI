@@ -11,7 +11,7 @@ enum CategoryMigrations {
                 .field(CategoryModel.FieldKeys.v1.order, .int, .required)
 
                 .unique(on: CategoryModel.FieldKeys.v1.name)
-                .unique(on: CategoryModel.FieldKeys.v1.order)
+
                 .ignoreExisting()
                 .create()
         }

@@ -3,6 +3,8 @@ import Fluent
 final class ActivityModel: Model {
     static let schema = "activities"
 
+    static let defaultId: UUID = .init()
+    
     enum FieldKeys {
         enum v1 {
             static var categoryId: FieldKey { "category_id" }

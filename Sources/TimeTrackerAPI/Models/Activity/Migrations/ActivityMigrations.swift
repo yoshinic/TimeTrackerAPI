@@ -18,7 +18,6 @@ enum ActivityMigrations {
                 )
 
                 .unique(on: ActivityModel.FieldKeys.v1.name)
-                .unique(on: ActivityModel.FieldKeys.v1.order)
 
                 .ignoreExisting()
                 .create()
@@ -30,7 +29,16 @@ enum ActivityMigrations {
     }
 
     struct seed: AsyncMigration {
-        func prepare(on _: Database) async throws {}
+        func prepare(on db: Database) async throws {
+            let new = ActivityModel(
+                categoryId: CategoryModel.defaultId,
+                name: "未登録",
+                color: "#FFFFFF",
+                order: 1
+            )
+
+            try await new.create(on: db)
+        }
 
         func revert(on _: Database) async throws {}
     }
