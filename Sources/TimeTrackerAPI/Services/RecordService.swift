@@ -18,7 +18,7 @@ public class RecordService {
             .init(
                 activityId: activityId,
                 startedAt: startedAt,
-                endedAt: endedAt ?? Date(),
+                endedAt: endedAt,
                 note: note
             ),
             on: db
