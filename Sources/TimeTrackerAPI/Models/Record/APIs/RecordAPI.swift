@@ -24,8 +24,8 @@ extension RecordModel {
     ) async throws -> [RecordModel] {
         try await RecordModel
             .query(on: db)
-            .join(parent: \.$activity)
-            .join(from: ActivityModel.self, parent: \.$category)
+            .join(parent: \.$activity, method: .left)
+            .join(from: ActivityModel.self, parent: \.$category, method: .left)
             .group { and in
                 guard let data = data else { return }
                 if let recordId = data.recordId {
