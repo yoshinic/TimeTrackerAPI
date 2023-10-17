@@ -9,7 +9,7 @@ extension RecordModel {
         let newRecord = RecordModel(
             activityId: data.activityId,
             startedAt: data.startedAt,
-            endedAt: data.startedAt,
+            endedAt: data.endedAt,
             note: data.note
         )
 
