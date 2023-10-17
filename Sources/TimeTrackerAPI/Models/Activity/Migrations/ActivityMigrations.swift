@@ -29,16 +29,7 @@ enum ActivityMigrations {
     }
 
     struct seed: AsyncMigration {
-        func prepare(on db: Database) async throws {
-            let new = ActivityModel(
-                categoryId: CategoryModel.defaultId,
-                name: "未登録",
-                color: "#FFFFFF",
-                order: 1
-            )
-
-            try await new.create(on: db)
-        }
+        func prepare(on db: Database) async throws {}
 
         func revert(on _: Database) async throws {}
     }
