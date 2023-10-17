@@ -42,6 +42,7 @@ final class RecordTests: AbstractionXCTestCase {
             .fetch(
                 .init(
                     recordId: newRecord.id!,
+                    fetchDateCase: .range,
                     from: nil,
                     to: nil,
                     activityIds: [],

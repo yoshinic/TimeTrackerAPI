@@ -22,8 +22,8 @@ final class RecordModel: Model {
     @Field(key: FieldKeys.v1.startedAt)
     var startedAt: Date
 
-    @Field(key: FieldKeys.v1.endedAt)
-    var endedAt: Date
+    @OptionalField(key: FieldKeys.v1.endedAt)
+    var endedAt: Date?
     
     @Field(key: FieldKeys.v1.note)
     var note: String
@@ -34,7 +34,7 @@ final class RecordModel: Model {
         _ id: RecordModel.IDValue? = nil,
         activityId: ActivityModel.IDValue,
         startedAt: Date,
-        endedAt: Date,
+        endedAt: Date?,
         note: String
     ) {
         self.id = id

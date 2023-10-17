@@ -8,7 +8,7 @@ enum RecordMigrations {
                 .id()
                 .field(RecordModel.FieldKeys.v1.activityId, .uuid, .required)
                 .field(RecordModel.FieldKeys.v1.startedAt, .datetime, .required)
-                .field(RecordModel.FieldKeys.v1.endedAt, .datetime, .required)
+                .field(RecordModel.FieldKeys.v1.endedAt, .datetime)
                 .field(RecordModel.FieldKeys.v1.note, .string, .required)
 
                 .foreignKey(

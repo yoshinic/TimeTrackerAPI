@@ -29,6 +29,7 @@ public class RecordService {
 
     public func fetch(
         recordId: UUID? = nil,
+        nullEnd: Bool = false,
         from: Date? = nil,
         to: Date? = nil,
         activityIds: [UUID] = [],
@@ -38,6 +39,7 @@ public class RecordService {
         let a = try await RecordModel.fetch(
             .init(
                 recordId: recordId,
+                fetchDateCase: nullEnd ? .nullEnd : .range,
                 from: from,
                 to: to,
                 activityIds: activityIds,
@@ -92,14 +94,14 @@ public struct RecordData: Codable, Identifiable {
     public var id: UUID
     public let activity: ActivityData
     public let startedAt: Date
-    public let endedAt: Date
+    public let endedAt: Date?
     public let note: String
 
     public init(
         id: UUID,
         activity: ActivityData,
         startedAt: Date,
-        endedAt: Date,
+        endedAt: Date?,
         note: String
     ) {
         self.id = id

@@ -25,6 +25,7 @@ extension RecordModel {
         try await RecordModel
             .query(on: db)
             .join(parent: \.$activity)
+            .join(from: ActivityModel.self, parent: \.$category)
             .group { and in
                 guard let data = data else { return }
                 if let recordId = data.recordId {
@@ -47,11 +48,16 @@ extension RecordModel {
                     }
                 }
 
-                if let from = data.from {
-                    and.filter(\.$startedAt == from)
-                }
-                if let to = data.to {
-                    and.filter(\.$endedAt == to)
+                switch data.fetchDateCase {
+                case .range:
+                    if let from = data.from {
+                        and.filter(\.$startedAt >= from)
+                    }
+                    if let to = data.to {
+                        and.filter(\.$endedAt <= to)
+                    }
+                case .nullEnd:
+                    and.filter(\.$endedAt == nil)
                 }
             }
             .all()
@@ -103,7 +109,7 @@ extension RecordModel {
         try ActivityModel.assignJoinedCategory(to: record.$activity.value!)
         return record
     }
-    
+
     @discardableResult
     static func eagerLoad(
         to record: RecordModel,
@@ -118,12 +124,14 @@ extension RecordModel {
 struct CreateRecord: Codable {
     let activityId: UUID
     let startedAt: Date
-    let endedAt: Date
+    let endedAt: Date?
     let note: String
 }
 
 struct FetchRecord: Codable {
     let recordId: UUID?
+
+    let fetchDateCase: FetchRecordDateCase
     let from: Date?
     let to: Date?
 
@@ -145,4 +153,9 @@ struct DeleteRecord: Codable {
     let activityId: UUID?
     let startedAt: Date?
     let endedAt: Date?
+}
+
+enum FetchRecordDateCase: Codable {
+    case range
+    case nullEnd
 }
