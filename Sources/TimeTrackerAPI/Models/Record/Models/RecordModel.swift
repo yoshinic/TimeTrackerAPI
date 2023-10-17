@@ -16,15 +16,15 @@ final class RecordModel: Model {
     @ID()
     var id: UUID?
 
-    @Parent(key: FieldKeys.v1.activityId)
-    var activity: ActivityModel
+    @OptionalParent(key: FieldKeys.v1.activityId)
+    var activity: ActivityModel?
 
     @Field(key: FieldKeys.v1.startedAt)
     var startedAt: Date
 
     @OptionalField(key: FieldKeys.v1.endedAt)
     var endedAt: Date?
-    
+
     @Field(key: FieldKeys.v1.note)
     var note: String
 
@@ -32,7 +32,7 @@ final class RecordModel: Model {
 
     init(
         _ id: RecordModel.IDValue? = nil,
-        activityId: ActivityModel.IDValue,
+        activityId: ActivityModel.IDValue?,
         startedAt: Date,
         endedAt: Date?,
         note: String

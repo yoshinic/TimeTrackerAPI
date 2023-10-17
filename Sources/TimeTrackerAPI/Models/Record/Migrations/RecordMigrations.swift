@@ -6,7 +6,7 @@ enum RecordMigrations {
             try await db
                 .schema(RecordModel.schema)
                 .id()
-                .field(RecordModel.FieldKeys.v1.activityId, .uuid, .required)
+                .field(RecordModel.FieldKeys.v1.activityId, .uuid)
                 .field(RecordModel.FieldKeys.v1.startedAt, .datetime, .required)
                 .field(RecordModel.FieldKeys.v1.endedAt, .datetime)
                 .field(RecordModel.FieldKeys.v1.note, .string, .required)

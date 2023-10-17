@@ -42,7 +42,7 @@ extension ActivityModel {
             }
             .sort(\.$order)
             .all()
-            .map { try assignJoinedCategory(to: $0) }
+            .compactMap { try assignJoinedCategory(to: $0) }
     }
 
     @discardableResult
@@ -108,9 +108,9 @@ extension ActivityModel {
 
     @discardableResult
     static func assignJoinedCategory(
-        to activity: ActivityModel
-    ) throws -> ActivityModel  {
-        activity.$category.value = try activity.joined(CategoryModel.self)
+        to activity: ActivityModel?
+    ) throws -> ActivityModel?  {
+        activity?.$category.value = try activity?.joined(CategoryModel.self)
         return activity
     }
 }

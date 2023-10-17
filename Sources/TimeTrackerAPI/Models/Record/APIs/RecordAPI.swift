@@ -106,7 +106,7 @@ extension RecordModel {
         to record: RecordModel
     ) throws -> RecordModel  {
         record.$activity.value = try record.joined(ActivityModel.self)
-        try ActivityModel.assignJoinedCategory(to: record.$activity.value!)
+        try ActivityModel.assignJoinedCategory(to: record.$activity.wrappedValue)
         return record
     }
 
@@ -116,13 +116,13 @@ extension RecordModel {
         on db: Database
     ) async throws -> RecordModel  {
         try await record.$activity.load(on: db)
-        try await record.activity.$category.load(on: db)
+        try await record.activity?.$category.load(on: db)
         return record
     }
 }
 
 struct CreateRecord: Codable {
-    let activityId: UUID
+    let activityId: UUID?
     let startedAt: Date
     let endedAt: Date?
     let note: String

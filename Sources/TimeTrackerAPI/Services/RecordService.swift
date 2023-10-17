@@ -9,7 +9,7 @@ public class RecordService {
     }
 
     public func create(
-        activityId: UUID,
+        activityId: UUID?,
         startedAt: Date = Date(),
         endedAt: Date? = nil,
         note: String = ""
@@ -92,14 +92,14 @@ public class RecordService {
 
 public struct RecordData: Codable, Identifiable {
     public var id: UUID
-    public let activity: ActivityData
+    public let activity: ActivityData?
     public let startedAt: Date
     public let endedAt: Date?
     public let note: String
 
     public init(
         id: UUID,
-        activity: ActivityData,
+        activity: ActivityData?,
         startedAt: Date,
         endedAt: Date?,
         note: String
@@ -116,7 +116,7 @@ extension RecordModel {
     var toData: RecordData {
         RecordData(
             id: self.id!,
-            activity: self.$activity.wrappedValue.toData,
+            activity: self.$activity.wrappedValue?.toData,
             startedAt: self.startedAt,
             endedAt: self.endedAt,
             note: self.note

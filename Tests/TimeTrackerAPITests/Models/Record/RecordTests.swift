@@ -87,8 +87,8 @@ final class RecordTests: AbstractionXCTestCase {
 
         XCTAssertTrue(
             new.note == note
-            && new.activity.name == name
-            && new.activity.category.name == category.name
+            && new.activity?.name == name
+            && new.activity?.category.name == category.name
         )
     }
 }
