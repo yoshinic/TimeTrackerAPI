@@ -14,7 +14,7 @@ final class DatabaseTests: AbstractionXCTestCase {
     }
 
     func testDatabase() async throws {
-        let sql = (dbm.database as! SQLDatabase)
+        let sql = (dbm.db as! SQLDatabase)
 
         do {
             try await sql.raw("asdf").run()

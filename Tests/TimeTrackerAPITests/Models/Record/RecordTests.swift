@@ -12,7 +12,7 @@ final class RecordTests: AbstractionXCTestCase {
 
     func testCreate() async throws {
         guard
-            let category = try await CategoryModel.query(on: dbm.database).first()
+            let category = try await CategoryModel.query(on: dbm.db).first()
         else { throw AppError.notFound }
         
         let name = "sample"
@@ -24,7 +24,7 @@ final class RecordTests: AbstractionXCTestCase {
                 color: "#000000",
                 order: 1
             ),
-            on: dbm.database
+            on: dbm.db
         )
 
         let newRecord = try await RecordModel.create(
@@ -34,7 +34,7 @@ final class RecordTests: AbstractionXCTestCase {
                 endedAt: Date(),
                 note: ""
             ),
-            on: dbm.database
+            on: dbm.db
         )
 
         guard
@@ -49,7 +49,7 @@ final class RecordTests: AbstractionXCTestCase {
                     activityNames: [],
                     activityColors: []
                 ),
-                on: dbm.database
+                on: dbm.db
             )
             .first
         else {
@@ -64,12 +64,12 @@ final class RecordTests: AbstractionXCTestCase {
     
     func testToData() async throws {
         guard
-            let category = try await CategoryModel.query(on: dbm.database).first()
+            let category = try await CategoryModel.query(on: dbm.db).first()
         else { throw AppError.notFound }
 
         let name = "a"
         let color = "#000000"
-        let activityService = ActivityService(db: dbm.database)
+        let activityService = ActivityService(db: dbm.db)
         let activity = try await activityService.create(
             categoryId: category.id!,
             name: name,
@@ -77,7 +77,7 @@ final class RecordTests: AbstractionXCTestCase {
         )
         
         let note = "zzz"
-        let recordService = RecordService(db: dbm.database)
+        let recordService = RecordService(db: dbm.db)
         let new = try await recordService.create(
             activityId: activity.id,
             startedAt: Date(),

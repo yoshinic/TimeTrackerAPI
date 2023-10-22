@@ -2,14 +2,13 @@ import Fluent
 
 public class DefaultServiceFactory {
     public static let shared = DefaultServiceFactory()
+    public let db: Database = DatabaseManager.shared.db
 
-    private let database: Database
+    public lazy var category: CategoryService = .init(db: db)
+    public lazy var activity: ActivityService = .init(db: db)
+    public lazy var record: RecordService = .init(db: db)
 
-    public lazy var category: CategoryService = .init(db: database)
-    public lazy var activity: ActivityService = .init(db: database)
-    public lazy var record: RecordService = .init(db: database)
-
-    private init() {
-        self.database = DatabaseManager.shared.database
+    public func setDatabase(filePath: String? = nil) async throws {
+        try await DatabaseManager.shared.setDatabase(filePath: filePath)
     }
 }

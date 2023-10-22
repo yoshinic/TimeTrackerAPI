@@ -12,18 +12,18 @@ final class ActivityTests: AbstractionXCTestCase {
 
     func testCreate() async throws {
         guard
-            let category = try await CategoryModel.query(on: dbm.database).first()
+            let category = try await CategoryModel.query(on: dbm.db).first()
         else { throw AppError.notFound }
 
         let name = "study"
         let newActivity = try await ActivityModel.create(
             .init(id: UUID(), categoryId: category.id!, name: name, color: "#000000", order: 1),
-            on: dbm.database
+            on: dbm.db
         )
 
         guard
             let found = try await ActivityModel
-            .fetch(.init(id: nil, name: name, color: nil), on: dbm.database)
+            .fetch(.init(id: nil, name: name, color: nil), on: dbm.db)
             .first
         else {
             return  XCTFail("")
@@ -35,10 +35,10 @@ final class ActivityTests: AbstractionXCTestCase {
 
     func testMove() async throws {
         guard
-            let category = try await CategoryModel.query(on: dbm.database).first()
+            let category = try await CategoryModel.query(on: dbm.db).first()
         else { throw AppError.notFound }
 
-        let a = try await ActivityModel.fetch(on: dbm.database)
+        let a = try await ActivityModel.fetch(on: dbm.db)
 
         let n1 = "sample1"
         let o1 = 1
@@ -50,7 +50,7 @@ final class ActivityTests: AbstractionXCTestCase {
                 color: "#000000",
                 order: o1
             ),
-            on: dbm.database
+            on: dbm.db
         )
 
         let n2 = "sample2"
@@ -63,10 +63,10 @@ final class ActivityTests: AbstractionXCTestCase {
                 color: "#000000",
                 order: o2
             ),
-            on: dbm.database
+            on: dbm.db
         )
 
-        let founds = try await ActivityModel.fetch(on: dbm.database)
+        let founds = try await ActivityModel.fetch(on: dbm.db)
 
         guard founds.count - a.count == 2 else { return  XCTFail("") }
         guard
@@ -78,10 +78,10 @@ final class ActivityTests: AbstractionXCTestCase {
         XCTAssertTrue(found2.name == n2 && found2.order == o2)
 
         // move
-        let service = ActivityService(db: dbm.database)
+        let service = ActivityService(db: dbm.db)
         try await service.updateOrder(ids: [founds[1].id!, founds[0].id!])
 
-        let moved = try await ActivityModel.fetch(on: dbm.database)
+        let moved = try await ActivityModel.fetch(on: dbm.db)
         guard
             let moved1 = moved.first(where: { $0.id == new1.id }),
             let moved2 = moved.first(where: { $0.id == new2.id })
@@ -93,12 +93,12 @@ final class ActivityTests: AbstractionXCTestCase {
 
     func testToData() async throws {
         guard
-            let category = try await CategoryModel.query(on: dbm.database).first()
+            let category = try await CategoryModel.query(on: dbm.db).first()
         else { throw AppError.notFound }
 
         let name = "a"
         let color = "#000000"
-        let service = ActivityService(db: dbm.database)
+        let service = ActivityService(db: dbm.db)
         let new = try await service.create(
             categoryId: category.id!,
             name: name,
@@ -114,11 +114,11 @@ final class ActivityTests: AbstractionXCTestCase {
 
     func testFetchEagerLoad() async throws {
         guard
-            let category = try await CategoryModel.query(on: dbm.database).first()
+            let category = try await CategoryModel.query(on: dbm.db).first()
         else { throw AppError.notFound }
 
         let a = try await ActivityModel
-            .fetch(.init(categoryId: category.id!), on: dbm.database)
+            .fetch(.init(categoryId: category.id!), on: dbm.db)
 
         let name = "sample"
         let color = "#000000"
@@ -129,11 +129,11 @@ final class ActivityTests: AbstractionXCTestCase {
                 color: color,
                 order: 1
             ),
-            on: dbm.database
+            on: dbm.db
         )
 
         let found = try await ActivityModel
-            .fetch(.init(categoryId: category.id!), on: dbm.database)
+            .fetch(.init(categoryId: category.id!), on: dbm.db)
 
         XCTAssertTrue(found.count - a.count == 1)
         XCTAssertTrue(found[0].$category.wrappedValue.name == category.name)

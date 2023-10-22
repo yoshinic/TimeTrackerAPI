@@ -24,8 +24,8 @@ class AbstractionXCTestCase: XCTestCase {
     }
 
     override func tearDown() async throws {
-        try await AllMigrations.seed().revert(on: dbm.database)
-        try await AllMigrations.v1().revert(on: dbm.database)
+        try await AllMigrations.seed().revert(on: dbm.db)
+        try await AllMigrations.v1().revert(on: dbm.db)
         try await dbm.shutdown()
         dbm = nil
 

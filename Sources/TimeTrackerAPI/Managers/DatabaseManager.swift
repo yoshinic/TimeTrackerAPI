@@ -16,6 +16,7 @@ class _DatabaseManager {
     private let threadPool: NIOThreadPool
     private let eventLoopGroup: EventLoopGroup
     private let dbs: Databases
+    let db: Database
 
     private let envStorage = ProcessInfo.processInfo.environment["DATABASE_STORAGE"]
     private let envFilePath = ProcessInfo.processInfo.environment["DATABASE_FILEPATH"]
@@ -29,43 +30,39 @@ class _DatabaseManager {
         self.threadPool = NIOThreadPool(numberOfThreads: System.coreCount)
         self.threadPool.start()
 
-        dbs = Databases(threadPool: threadPool, on: eventLoopGroup)
-        dbs.default(to: .sqlite)
+        self.dbs = Databases(threadPool: threadPool, on: eventLoopGroup)
+        self.db = self.dbs.database(
+            logger: .init(label: "app.log"),
+            on: self.dbs.eventLoopGroup.any()
+        )!
+    }
 
+    func setDatabase(filePath: String? = nil) async throws {
+        setDatabaseEnvironment(filePath: filePath)
+        try await runMigrations()
+    }
+
+    private func setDatabaseEnvironment(filePath: String? = nil) {
+        dbs.default(to: .sqlite)
+        #if DEBUG
         // 環境変数からSQLiteの保存先を取得
-        if let envStorage = envStorage {
-            if envStorage == "memory" {
-                dbs.use(.sqlite(.memory), as: .sqlite)
-            } else if envStorage == "file", let envFilePath = envFilePath {
-                dbs.use(.sqlite(.file(envFilePath)), as: .sqlite)
-            } else {
-                fatalError("Invalid DATABASE_STORAGE or DATABASE_FILEPATH value")
-            }
+        if let envStorage = envStorage, envStorage == "file", let envFilePath = envFilePath {
+            dbs.use(.sqlite(.file(envFilePath)), as: .sqlite)
         } else {
             dbs.use(.sqlite(.memory), as: .sqlite)
         }
-
-        // マイグレーションの実行
-        Task {
-            do {
-                try await self.runMigrations()
-            } catch {
-                print("Error running migrations: \(error)")
-            }
+        #else
+        if let filePath = filePath {
+            dbs.use(.sqlite(.file(filePath)), as: .sqlite)
+        } else {
+            dbs.use(.sqlite(.memory), as: .sqlite)
         }
+        #endif
     }
 
     private func runMigrations() async throws {
-        // すべてのマイグレーションを実行
-        try await AllMigrations.v1().prepare(on: self.database)
-        try await AllMigrations.seed().prepare(on: self.database)
-    }
-
-    var database: Database {
-        dbs.database(
-            logger: .init(label: "app.log"),
-            on: dbs.eventLoopGroup.any()
-        )!
+        try await AllMigrations.v1().prepare(on: db)
+        try await AllMigrations.seed().prepare(on: db)
     }
 
     func shutdown() async throws {

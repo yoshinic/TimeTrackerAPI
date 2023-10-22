@@ -11,7 +11,7 @@ final class CategoryTests: AbstractionXCTestCase {
     }
 
     func testCreate() async throws {
-        let service: CategoryService = .init(db: dbm.database)
+        let service: CategoryService = .init(db: dbm.db)
 
         let name = "sample"
         let color = "#FFFFFF"
@@ -23,7 +23,7 @@ final class CategoryTests: AbstractionXCTestCase {
     }
 
     func testToData() async throws {
-        let service: CategoryService = .init(db: dbm.database)
+        let service: CategoryService = .init(db: dbm.db)
 
         let name = "sample"
         let color = "#FFFFFF"
@@ -37,7 +37,7 @@ final class CategoryTests: AbstractionXCTestCase {
         let category = try await CategoryModel
             .create(
                 .init(name: name, color: color, order: 10),
-                on: dbm.database
+                on: dbm.db
             )
 
         let data = category.toData

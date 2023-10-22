@@ -7,8 +7,8 @@ final class AllMigrationsTests: XCTestCase {
     override func setUp() async throws {
         try await super.setUp()
         dbm = TestDatabaseManager()
-        try await AllMigrations.v1().prepare(on: dbm.database)
-        try await AllMigrations.v1().revert(on: dbm.database)
+        try await AllMigrations.v1().prepare(on: dbm.db)
+        try await AllMigrations.v1().revert(on: dbm.db)
     }
 
     override func tearDown() async throws {
@@ -19,15 +19,15 @@ final class AllMigrationsTests: XCTestCase {
     }
 
     func testMigration() async throws {
-        try await AllMigrations.v1().prepare(on: dbm.database)
-        try await AllMigrations.v1().revert(on: dbm.database)
+        try await AllMigrations.v1().prepare(on: dbm.db)
+        try await AllMigrations.v1().revert(on: dbm.db)
     }
 
     func testMigrationWithSeed() async throws {
-        try await AllMigrations.v1().prepare(on: dbm.database)
-        try await AllMigrations.seed().prepare(on: dbm.database)
+        try await AllMigrations.v1().prepare(on: dbm.db)
+        try await AllMigrations.seed().prepare(on: dbm.db)
 
-        try await AllMigrations.seed().revert(on: dbm.database)
-        try await AllMigrations.v1().revert(on: dbm.database)
+        try await AllMigrations.seed().revert(on: dbm.db)
+        try await AllMigrations.v1().revert(on: dbm.db)
     }
 }
