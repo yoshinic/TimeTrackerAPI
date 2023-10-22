@@ -24,7 +24,7 @@ let package = Package(
             name: "TimeTrackerAPI",
             dependencies: [
                 .product(name: "Fluent", package: "fluent"),
-                .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver")
+                .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
             ]
         ),
         .testTarget(

@@ -14,9 +14,9 @@ public class CategoryService {
         id: UUID? = nil,
         name: String,
         color: String
-    ) async throws -> CategoryData {
-        guard
-            let category = try await CategoryModel.create(
+    ) async throws -> CategoryData? {
+        try await CategoryModel
+            .create(
                 .init(
                     id: id,
                     name: name,
@@ -25,13 +25,7 @@ public class CategoryService {
                 ),
                 on: db
             )
-        else { throw AppError.duplicate }
-        return .init(
-            id: category.id!,
-            name: category.name,
-            color: category.color,
-            order: category.order
-        )
+            .toData
     }
 
     public func fetch(
@@ -39,18 +33,12 @@ public class CategoryService {
         name: String? = nil,
         color: String? = nil
     ) async throws -> [CategoryData] {
-        let a = try await CategoryModel.fetch(
-            .init(id: id, name: name, color: color),
-            on: db
-        )
-        return a.map {
-            .init(
-                id: $0.id!,
-                name: $0.name,
-                color: $0.color,
-                order: $0.order
+        try await CategoryModel
+            .fetch(
+                .init(id: id, name: name, color: color),
+                on: db
             )
-        }
+            .map { $0.toData }
     }
 
     @discardableResult
@@ -60,21 +48,17 @@ public class CategoryService {
         color: String? = nil,
         order: Int? = nil
     ) async throws -> CategoryData {
-        let updated = try await CategoryModel.update(
-            .init(
-                id: id,
-                name: name,
-                color: color,
-                order: order
-            ),
-            on: db
-        )
-        return .init(
-            id: updated.id!,
-            name: updated.name,
-            color: updated.color,
-            order: updated.order
-        )
+        try await CategoryModel
+            .update(
+                .init(
+                    id: id,
+                    name: name,
+                    color: color,
+                    order: order
+                ),
+                on: db
+            )
+            .toData
     }
 
     // 与えられた配列の順番通りに order を設定し直す

@@ -17,13 +17,9 @@ final class CategoryTests: AbstractionXCTestCase {
         let color = "#FFFFFF"
         let new = try await service.create(name: name, color: color)
 
-        guard
-            let found = try await service.fetch(name: name, color: color).first
-        else {
-            return  XCTFail("")
-        }
+        let found = try await service.fetch(name: name, color: color).first
 
-        XCTAssertTrue(new.name == found.name)
+        XCTAssertTrue(new?.name == found?.name)
     }
 
     func testToData() async throws {
@@ -31,18 +27,18 @@ final class CategoryTests: AbstractionXCTestCase {
 
         let name = "sample"
         let color = "#FFFFFF"
-        let new = try await service.create(name: name, color: color)
-
+        
         guard
-            let category = try await CategoryModel
+            let new = try await service.create(name: name, color: color)
+        else {
+            return  XCTFail("")
+        }
+
+        let category = try await CategoryModel
             .create(
                 .init(name: name, color: color, order: 10),
                 on: dbm.database
             )
-        else {
-            XCTAssertThrowsError("invalid")
-            return
-        }
 
         let data = category.toData
         XCTAssertTrue(new.name == data.name && new.color == data.color)

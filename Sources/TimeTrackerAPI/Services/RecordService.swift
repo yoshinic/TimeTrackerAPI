@@ -14,17 +14,17 @@ public class RecordService {
         endedAt: Date? = nil,
         note: String = ""
     ) async throws -> RecordData {
-        let new = try await RecordModel.create(
-            .init(
-                activityId: activityId,
-                startedAt: startedAt,
-                endedAt: endedAt,
-                note: note
-            ),
-            on: db
-        )
-
-        return new.toData
+        try await RecordModel
+            .create(
+                .init(
+                    activityId: activityId,
+                    startedAt: startedAt,
+                    endedAt: endedAt,
+                    note: note
+                ),
+                on: db
+            )
+            .toData
     }
 
     public func fetch(
@@ -36,19 +36,20 @@ public class RecordService {
         activityNames: [String] = [],
         activityColors: [String] = []
     ) async throws -> [RecordData] {
-        let a = try await RecordModel.fetch(
-            .init(
-                recordId: recordId,
-                fetchDateCase: nullEnd ? .nullEnd : .range,
-                from: from,
-                to: to,
-                activityIds: activityIds,
-                activityNames: activityNames,
-                activityColors: activityColors
-            ),
-            on: db
-        )
-        return a.map { $0.toData }
+        try await RecordModel
+            .fetch(
+                .init(
+                    recordId: recordId,
+                    fetchDateCase: nullEnd ? .nullEnd : .range,
+                    from: from,
+                    to: to,
+                    activityIds: activityIds,
+                    activityNames: activityNames,
+                    activityColors: activityColors
+                ),
+                on: db
+            )
+            .map { $0.toData }
     }
 
     public func update(
@@ -58,18 +59,18 @@ public class RecordService {
         endedAt: Date? = nil,
         note: String? = nil
     ) async throws -> RecordData {
-        let updated = try await RecordModel.update(
-            .init(
-                recordId: recordId,
-                activityId: activityId,
-                startedAt: startedAt,
-                endedAt: endedAt,
-                note: note
-            ),
-            on: db
-        )
-
-        return updated.toData
+        try await RecordModel
+            .update(
+                .init(
+                    recordId: recordId,
+                    activityId: activityId,
+                    startedAt: startedAt,
+                    endedAt: endedAt,
+                    note: note
+                ),
+                on: db
+            )
+            .toData
     }
 
     public func delete(

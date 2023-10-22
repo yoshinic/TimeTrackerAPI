@@ -2,7 +2,7 @@ import FluentKit
 
 public class ActivityService {
     public static let defaultId: UUID = ActivityModel.defaultId
-    
+
     private let db: Database
     private let categoryService: CategoryService
 
@@ -18,18 +18,19 @@ public class ActivityService {
         name: String,
         color: String
     ) async throws -> ActivityData {
-        try await db.transaction { db in
-            let new = try await ActivityModel.create(
-                .init(
-                    id: id,
-                    categoryId: categoryId,
-                    name: name,
-                    color: color,
-                    order: await ActivityModel.count(on: db) + 1
-                ),
-                on: db
-            )
-            return new.toData
+        try await db.transaction {
+            try await ActivityModel
+                .create(
+                    .init(
+                        id: id,
+                        categoryId: categoryId,
+                        name: name,
+                        color: color,
+                        order: await ActivityModel.count(on: $0) + 1
+                    ),
+                    on: $0
+                )
+                .toData
         }
     }
 
@@ -39,16 +40,17 @@ public class ActivityService {
         name: String? = nil,
         color: String? = nil
     ) async throws -> [ActivityData] {
-        let a = try await ActivityModel.fetch(
-            .init(
-                id: id,
-                categoryId: categoryId,
-                name: name,
-                color: color
-            ),
-            on: db
-        )
-        return a.map { $0.toData }
+        try await ActivityModel
+            .fetch(
+                .init(
+                    id: id,
+                    categoryId: categoryId,
+                    name: name,
+                    color: color
+                ),
+                on: db
+            )
+            .map { $0.toData }
     }
 
     @discardableResult
@@ -59,17 +61,18 @@ public class ActivityService {
         color: String? = nil,
         order: Int? = nil
     ) async throws -> ActivityData {
-        let updated = try await ActivityModel.update(
-            .init(
-                id: id,
-                categoryId: categoryId,
-                name: name,
-                color: color,
-                order: order
-            ),
-            on: db
-        )
-        return updated.toData
+        try await ActivityModel
+            .update(
+                .init(
+                    id: id,
+                    categoryId: categoryId,
+                    name: name,
+                    color: color,
+                    order: order
+                ),
+                on: db
+            )
+            .toData
     }
 
     // 与えられた配列の順番通りに order を設定し直す

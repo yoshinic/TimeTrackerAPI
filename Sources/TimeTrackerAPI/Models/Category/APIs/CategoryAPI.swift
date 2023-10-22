@@ -6,7 +6,7 @@ extension CategoryModel {
     static func create(
         _ data: CreateCategory,
         on db: Database
-    ) async throws -> CategoryModel? {
+    ) async throws -> CategoryModel {
         let founds = try await fetch(.init(name: data.name), on: db)
 
         switch founds.count {
