@@ -16,12 +16,7 @@ class _DatabaseManager {
     private let threadPool: NIOThreadPool
     private let eventLoopGroup: EventLoopGroup
     private let dbs: Databases
-    var db: Database {
-        dbs.database(
-            logger: .init(label: "app.log"),
-            on: self.dbs.eventLoopGroup.any()
-        )!
-    }
+    private let db: Database
 
     private let envStorage = ProcessInfo.processInfo.environment["DATABASE_STORAGE"]
     private let envFilePath = ProcessInfo.processInfo.environment["DATABASE_FILEPATH"]
@@ -37,6 +32,10 @@ class _DatabaseManager {
 
         self.dbs = Databases(threadPool: threadPool, on: eventLoopGroup)
         dbs.default(to: .sqlite)
+        self.db = self.dbs.database(
+            logger: .init(label: "app.log"),
+            on: self.dbs.eventLoopGroup.any()
+        )!
     }
 
     func setDatabase(filePath: String? = nil) async throws {

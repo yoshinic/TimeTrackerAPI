@@ -1,8 +1,8 @@
 import Fluent
 
 public class DefaultServiceFactory {
-    public static let shared = DefaultServiceFactory()
-    public var db: Database { DatabaseManager.shared.db }
+    public static let shared: DefaultServiceFactory = .init()
+    public static let dbm: DatabaseManager = .shared
 
     public lazy var category: CategoryService = .init(db: db)
     public lazy var activity: ActivityService = .init(db: db)
