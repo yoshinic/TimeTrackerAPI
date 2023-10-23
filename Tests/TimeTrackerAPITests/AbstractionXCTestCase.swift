@@ -18,6 +18,7 @@ class AbstractionXCTestCase: XCTestCase {
         }
 
         dbm = TestDatabaseManager()
+        try await dbm.setDatabase(filePath: "/Users/yoshi/Desktop/xxx.sqlite3")
 
         // dbm = TestDatabaseManager() でインスタンスが作成されるまで待機
         try await Task.sleep(nanoseconds: 100_000_000)

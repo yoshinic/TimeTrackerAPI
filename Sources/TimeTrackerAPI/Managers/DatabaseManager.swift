@@ -15,12 +15,12 @@ final class DatabaseManager: _DatabaseManager {
 class _DatabaseManager {
     private let threadPool: NIOThreadPool
     private let eventLoopGroup: EventLoopGroup
-    private let dbs: Databases
-    private let db: Database
 
     private let envStorage = ProcessInfo.processInfo.environment["DATABASE_STORAGE"]
     private let envFilePath = ProcessInfo.processInfo.environment["DATABASE_FILEPATH"]
-    private let fileDisposal = Bool(ProcessInfo.processInfo.environment["DATABASE_FILEDISPOSAL"] ?? "false")
+
+    let dbs: Databases
+    var db: Database!
 
     init() {
         // EventLoopGroupの作成
@@ -32,14 +32,17 @@ class _DatabaseManager {
 
         self.dbs = Databases(threadPool: threadPool, on: eventLoopGroup)
         dbs.default(to: .sqlite)
-        self.db = self.dbs.database(
-            logger: .init(label: "app.log"),
-            on: self.dbs.eventLoopGroup.any()
-        )!
     }
 
     func setDatabase(filePath: String? = nil) async throws {
         setDatabaseEnvironment(filePath: filePath)
+
+        db = dbs.database(
+            .sqlite,
+            logger: .init(label: "app.log"),
+            on: dbs.eventLoopGroup.any()
+        )!
+
         try await runMigrations()
     }
 

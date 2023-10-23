@@ -7,6 +7,7 @@ final class AllMigrationsTests: XCTestCase {
     override func setUp() async throws {
         try await super.setUp()
         dbm = TestDatabaseManager()
+        try await dbm.setDatabase()
         try await AllMigrations.v1().prepare(on: dbm.db)
         try await AllMigrations.v1().revert(on: dbm.db)
     }

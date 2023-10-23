@@ -17,7 +17,7 @@
       },
       {
         "key" : "DATABASE_FILEPATH",
-        "value" : ".\/sample.sqlite"
+        "value" : "\/Users\/yoshi\/Desktop\/sample.sqlite"
       },
       {
         "key" : "DATABASE_FILEDISPOSAL",
