@@ -29,7 +29,7 @@ enum CategoryMigrations {
         ]
 
         func prepare(on db: Database) async throws {
-            for e in data {7
+            for e in data {
                 try await CategoryModel.create(
                     .init(
                         id: e.id,
