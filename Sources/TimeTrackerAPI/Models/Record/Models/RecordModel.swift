@@ -1,5 +1,5 @@
 import Foundation
-import Fluent
+import FluentKit
 
 final class RecordModel: Model {
     static let schema = "records"

@@ -1,6 +1,6 @@
 @testable import TimeTrackerAPI
 import XCTest
-import Fluent
+
 
 class AbstractionXCTestCase: XCTestCase {
     var dbm: TestDatabaseManager!

@@ -1,4 +1,4 @@
-import Fluent
+import FluentKit
 
 enum ActivityMigrations {
     struct v1: AsyncMigration {

@@ -1,5 +1,4 @@
 import Foundation
-import Fluent
 import FluentSQLiteDriver
 import NIO
 
@@ -13,13 +12,13 @@ final class DatabaseManager: _DatabaseManager {
 
 // 本番時とテスト時で分けるための（擬似）抽象クラス
 class _DatabaseManager {
-    private let threadPool: NIOThreadPool
-    private let eventLoopGroup: EventLoopGroup
+    private var threadPool: NIOThreadPool!
+    private var eventLoopGroup: EventLoopGroup!
 
     private let envStorage = ProcessInfo.processInfo.environment["DATABASE_STORAGE"]
     private let envFilePath = ProcessInfo.processInfo.environment["DATABASE_FILEPATH"]
 
-    let dbs: Databases
+    var dbs: Databases!
     var db: Database!
 
     init() {
@@ -72,5 +71,14 @@ class _DatabaseManager {
         dbs.shutdown()
         try await threadPool.shutdownGracefully()
         try await eventLoopGroup.shutdownGracefully()
+    }
+
+    deinit {
+        self.dbs.shutdown()
+        self.dbs = nil
+        try? self.threadPool.syncShutdownGracefully()
+        self.threadPool = nil
+        try? self.eventLoopGroup.syncShutdownGracefully()
+        self.eventLoopGroup = nil
     }
 }

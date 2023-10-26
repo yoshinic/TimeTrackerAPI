@@ -1,5 +1,5 @@
 import Foundation
-import Fluent
+import FluentKit
 
 final class CategoryModel: Model {
     static let schema = "categories"

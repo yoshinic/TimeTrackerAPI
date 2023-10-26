@@ -1,4 +1,4 @@
-import Fluent
+import FluentKit
 
 enum CategoryMigrations {
     struct v1: AsyncMigration {
@@ -29,14 +29,16 @@ enum CategoryMigrations {
         ]
 
         func prepare(on db: Database) async throws {
-            for e in data {
-                let new = CategoryModel(
-                    e.id,
-                    name: e.name,
-                    color: e.color,
-                    order: e.order
+            for e in data {7
+                try await CategoryModel.create(
+                    .init(
+                        id: e.id,
+                        name: e.name,
+                        color: e.color,
+                        order: e.order
+                    ),
+                    on: db
                 )
-                try await new.create(on: db)
             }
         }
 

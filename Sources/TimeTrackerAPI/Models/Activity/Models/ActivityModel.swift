@@ -1,4 +1,4 @@
-import Fluent
+import FluentKit
 
 final class ActivityModel: Model {
     static let schema = "activities"

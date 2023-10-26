@@ -1,4 +1,4 @@
-import Fluent
+import FluentKit
 
 enum RecordMigrations {
     struct v1: AsyncMigration {
