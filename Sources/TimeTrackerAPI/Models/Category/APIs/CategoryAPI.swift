@@ -12,6 +12,7 @@ extension CategoryModel {
         switch founds.count {
         case 0:
             let newCategory = CategoryModel(
+                id: data.id,
                 name: data.name,
                 color: data.color,
                 order: data.order
