@@ -116,6 +116,8 @@ public struct ActivityData: Codable, Identifiable {
     }
 }
 
+extension ActivityData: Hashable {}
+
 extension ActivityModel {
     var toData: ActivityData {
         ActivityData(

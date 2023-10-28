@@ -99,6 +99,8 @@ public struct CategoryData: Codable, Identifiable {
     }
 }
 
+extension CategoryData: Hashable {}
+
 extension CategoryModel {
     var toData: CategoryData {
         CategoryData(

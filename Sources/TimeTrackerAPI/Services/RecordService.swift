@@ -111,6 +111,8 @@ public struct RecordData: Codable, Identifiable {
     }
 }
 
+extension RecordData: Hashable {}
+
 extension RecordModel {
     var toData: RecordData {
         RecordData(
