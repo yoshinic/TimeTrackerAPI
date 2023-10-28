@@ -14,7 +14,7 @@ final class RecordTests: AbstractionXCTestCase {
         guard
             let category = try await CategoryModel.query(on: dbm.db).first()
         else { throw AppError.notFound }
-        
+
         let name = "sample"
         let newActivity = try await ActivityModel.create(
             .init(
@@ -45,9 +45,8 @@ final class RecordTests: AbstractionXCTestCase {
                     fetchDateCase: .range,
                     from: nil,
                     to: nil,
-                    activityIds: [],
-                    activityNames: [],
-                    activityColors: []
+                    categoryIds: [],
+                    activityIds: []
                 ),
                 on: dbm.db
             )
@@ -61,7 +60,7 @@ final class RecordTests: AbstractionXCTestCase {
         XCTAssertTrue(newRecord.startedAt == found.startedAt)
         XCTAssertTrue(newRecord.endedAt == found.endedAt)
     }
-    
+
     func testToData() async throws {
         guard
             let category = try await CategoryModel.query(on: dbm.db).first()
@@ -75,7 +74,7 @@ final class RecordTests: AbstractionXCTestCase {
             name: name,
             color: color
         )
-        
+
         let note = "zzz"
         let recordService = RecordService(db: dbm.db)
         let new = try await recordService.create(
@@ -87,8 +86,8 @@ final class RecordTests: AbstractionXCTestCase {
 
         XCTAssertTrue(
             new.note == note
-            && new.activity?.name == name
-            && new.activity?.category.name == category.name
+                && new.activity?.name == name
+                && new.activity?.category.name == category.name
         )
     }
 }

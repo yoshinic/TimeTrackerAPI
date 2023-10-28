@@ -32,9 +32,8 @@ public class RecordService {
         nullEnd: Bool = false,
         from: Date? = nil,
         to: Date? = nil,
-        activityIds: [UUID] = [],
-        activityNames: [String] = [],
-        activityColors: [String] = []
+        categoryIds: [UUID] = [],
+        activityIds: [UUID] = []
     ) async throws -> [RecordData] {
         try await RecordModel
             .fetch(
@@ -43,9 +42,8 @@ public class RecordService {
                     fetchDateCase: nullEnd ? .nullEnd : .range,
                     from: from,
                     to: to,
-                    activityIds: activityIds,
-                    activityNames: activityNames,
-                    activityColors: activityColors
+                    categoryIds: categoryIds,
+                    activityIds: activityIds
                 ),
                 on: db
             )

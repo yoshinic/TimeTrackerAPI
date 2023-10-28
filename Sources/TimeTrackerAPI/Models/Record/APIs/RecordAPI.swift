@@ -33,18 +33,11 @@ extension RecordModel {
                 }
 
                 and.group(.or) { or in
+                    data.categoryIds.forEach {
+                        or.filter(CategoryModel.self, \.$id == $0)
+                    }
                     data.activityIds.forEach {
                         or.filter(ActivityModel.self, \.$id == $0)
-                    }
-                }
-                and.group(.or) { or in
-                    data.activityNames.forEach {
-                        or.filter(ActivityModel.self, \.$name == $0)
-                    }
-                }
-                and.group(.or) { or in
-                    data.activityColors.forEach {
-                        or.filter(ActivityModel.self, \.$color == $0)
                     }
                 }
 
@@ -135,9 +128,8 @@ struct FetchRecord: Codable {
     let from: Date?
     let to: Date?
 
+    let categoryIds: [UUID]
     let activityIds: [UUID]
-    let activityNames: [String]
-    let activityColors: [String]
 }
 
 struct UpdateRecord: Codable {
