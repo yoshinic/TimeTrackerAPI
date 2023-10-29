@@ -57,6 +57,7 @@ extension RecordModel {
             .map { try assignJoinedActivity(to: $0) }
     }
 
+    @discardableResult
     static func update(
         _ data: UpdateRecord,
         on db: Database
@@ -98,8 +99,16 @@ extension RecordModel {
     static func assignJoinedActivity(
         to record: RecordModel
     ) throws -> RecordModel  {
-        record.$activity.value = try record.joined(ActivityModel.self)
-        try ActivityModel.assignJoinedCategory(to: record.$activity.wrappedValue)
+        do {
+            record.$activity.value = try record.joined(ActivityModel.self)
+        } catch {
+            print(error)
+        }
+        do {
+            try ActivityModel.assignJoinedCategory(to: record.$activity.wrappedValue)
+        } catch {
+            print(error)
+        }
         return record
     }
 
