@@ -63,11 +63,7 @@ extension RecordModel {
         on db: Database
     ) async throws -> RecordModel {
         guard
-            let found = try await RecordModel
-            .query(on: db)
-            .join(parent: \.$activity)
-            .filter(\.$id == data.recordId)
-            .first()
+            let found = try await fetch(.init(recordId: data.recordId), on: db).first
         else {
             throw AppError.notFound
         }
@@ -139,6 +135,22 @@ struct FetchRecord: Codable {
 
     let categoryIds: [UUID]
     let activityIds: [UUID]
+    
+    init(
+        recordId: UUID? = nil,
+        fetchDateCase: FetchRecordDateCase = .range,
+        from: Date? = nil,
+        to: Date? = nil,
+        categoryIds: [UUID] = [],
+        activityIds: [UUID] = []
+    ) {
+        self.recordId = recordId
+        self.fetchDateCase = fetchDateCase
+        self.from = from
+        self.to = to
+        self.categoryIds = categoryIds
+        self.activityIds = activityIds
+    }
 }
 
 struct UpdateRecord: Codable {
@@ -147,6 +159,20 @@ struct UpdateRecord: Codable {
     let startedAt: Date?
     let endedAt: Date?
     let note: String?
+    
+    init(
+        recordId: UUID,
+        activityId: UUID? = nil,
+        startedAt: Date? = nil,
+        endedAt: Date? = nil,
+        note: String? = nil
+    ) {
+        self.recordId = recordId
+        self.activityId = activityId
+        self.startedAt = startedAt
+        self.endedAt = endedAt
+        self.note = note
+    }
 }
 
 struct DeleteRecord: Codable {
@@ -154,6 +180,18 @@ struct DeleteRecord: Codable {
     let activityId: UUID?
     let startedAt: Date?
     let endedAt: Date?
+    
+    init(
+        recordId: UUID? = nil,
+        activityId: UUID? = nil,
+        startedAt: Date? = nil,
+        endedAt: Date? = nil
+    ) {
+        self.recordId = recordId
+        self.activityId = activityId
+        self.startedAt = startedAt
+        self.endedAt = endedAt
+    }
 }
 
 enum FetchRecordDateCase: Codable {
