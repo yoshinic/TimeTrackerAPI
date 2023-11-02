@@ -41,12 +41,11 @@ final class RecordTests: AbstractionXCTestCase {
             let found = try await RecordModel
             .fetch(
                 .init(
-                    recordId: newRecord.id!,
-                    fetchDateCase: .range,
+                    id: newRecord.id!,
+                    categories: [],
+                    activities: [],
                     from: nil,
-                    to: nil,
-                    categoryIds: [],
-                    activityIds: []
+                    to: nil
                 ),
                 on: dbm.db
             )

@@ -28,22 +28,21 @@ public class RecordService {
     }
 
     public func fetch(
-        recordId: UUID? = nil,
+        id: UUID? = nil,
+        categories: Set<UUID> = [],
+        activities: Set<UUID> = [],
         nullEnd: Bool = false,
         from: Date? = nil,
-        to: Date? = nil,
-        categoryIds: [UUID] = [],
-        activityIds: [UUID] = []
+        to: Date? = nil
     ) async throws -> [RecordData] {
         try await RecordModel
             .fetch(
                 .init(
-                    recordId: recordId,
-                    fetchDateCase: nullEnd ? .nullEnd : .range,
+                    id: id,
+                    categories: categories,
+                    activities: activities,
                     from: from,
-                    to: to,
-                    categoryIds: categoryIds,
-                    activityIds: activityIds
+                    to: to
                 ),
                 on: db
             )
@@ -51,7 +50,7 @@ public class RecordService {
     }
 
     public func update(
-        recordId: UUID,
+        id: UUID,
         activityId: UUID? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil,
@@ -60,7 +59,7 @@ public class RecordService {
         try await RecordModel
             .update(
                 .init(
-                    recordId: recordId,
+                    id: id,
                     activityId: activityId,
                     startedAt: startedAt,
                     endedAt: endedAt,

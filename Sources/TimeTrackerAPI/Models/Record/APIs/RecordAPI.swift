@@ -28,29 +28,27 @@ extension RecordModel {
             .join(from: ActivityModel.self, parent: \.$category, method: .left)
             .group { and in
                 guard let data = data else { return }
-                if let recordId = data.recordId {
-                    and.filter(\.$id == recordId)
+
+                if let id = data.id {
+                    and.filter(\.$id == id)
                 }
 
                 and.group(.or) { or in
-                    data.categoryIds.forEach {
+                    data.categories.forEach {
                         or.filter(CategoryModel.self, \.$id == $0)
                     }
-                    data.activityIds.forEach {
+                    data.activities.forEach {
                         or.filter(ActivityModel.self, \.$id == $0)
                     }
                 }
 
-                switch data.fetchDateCase {
-                case .range:
+                and.group(.or) { or in
                     if let from = data.from {
-                        and.filter(\.$startedAt >= from)
+                        or.filter(\.$endedAt > from).filter(\.$endedAt == nil)
                     }
-                    if let to = data.to {
-                        and.filter(\.$endedAt <= to)
-                    }
-                case .nullEnd:
-                    and.filter(\.$endedAt == nil)
+                }
+                if let to = data.to {
+                    and.filter(\.$startedAt < to)
                 }
             }
             .all()
@@ -63,7 +61,7 @@ extension RecordModel {
         on db: Database
     ) async throws -> RecordModel {
         guard
-            let found = try await fetch(.init(recordId: data.recordId), on: db).first
+            let found = try await fetch(.init(id: data.id), on: db).first
         else {
             throw AppError.notFound
         }
@@ -135,47 +133,42 @@ struct CreateRecord: Codable {
 }
 
 struct FetchRecord: Codable {
-    let recordId: UUID?
-
-    let fetchDateCase: FetchRecordDateCase
+    let id: UUID?
+    let categories: Set<UUID>
+    let activities: Set<UUID>
     let from: Date?
     let to: Date?
 
-    let categoryIds: [UUID]
-    let activityIds: [UUID]
-
     init(
-        recordId: UUID? = nil,
-        fetchDateCase: FetchRecordDateCase = .range,
+        id: UUID? = nil,
+        categories: Set<UUID> = [],
+        activities: Set<UUID> = [],
         from: Date? = nil,
-        to: Date? = nil,
-        categoryIds: [UUID] = [],
-        activityIds: [UUID] = []
+        to: Date? = nil
     ) {
-        self.recordId = recordId
-        self.fetchDateCase = fetchDateCase
+        self.id = id
+        self.categories = categories
+        self.activities = activities
         self.from = from
         self.to = to
-        self.categoryIds = categoryIds
-        self.activityIds = activityIds
     }
 }
 
 struct UpdateRecord: Codable {
-    let recordId: UUID
+    let id: UUID
     let activityId: UUID?
     let startedAt: Date?
     let endedAt: Date?
     let note: String?
 
     init(
-        recordId: UUID,
+        id: UUID,
         activityId: UUID? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil,
         note: String? = nil
     ) {
-        self.recordId = recordId
+        self.id = id
         self.activityId = activityId
         self.startedAt = startedAt
         self.endedAt = endedAt
@@ -189,9 +182,4 @@ struct DeleteRecord: Codable {
     init(id: UUID? = nil) {
         self.id = id
     }
-}
-
-enum FetchRecordDateCase: Codable {
-    case range
-    case nullEnd
 }
