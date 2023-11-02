@@ -71,19 +71,9 @@ public class RecordService {
             .toData
     }
 
-    public func delete(
-        recordId: UUID? = nil,
-        activityId: UUID? = nil,
-        startedAt: Date? = nil,
-        endedAt: Date? = nil
-    ) async throws {
+    public func delete(id: UUID? = nil) async throws {
         try await RecordModel.delete(
-            .init(
-                recordId: recordId,
-                activityId: activityId,
-                startedAt: startedAt,
-                endedAt: endedAt
-            ),
+            .init(id: id),
             on: db
         )
     }

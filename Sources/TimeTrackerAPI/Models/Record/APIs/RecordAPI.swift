@@ -89,7 +89,15 @@ extension RecordModel {
     static func delete(
         _ data: DeleteRecord? = nil,
         on db: Database
-    ) async throws {}
+    ) async throws {
+        try await RecordModel
+            .query(on: db)
+            .group(.and) { and in
+                guard let id = data?.id else { return }
+                and.filter(\.$id == id)
+            }
+            .delete()
+    }
 
     @discardableResult
     static func assignJoinedActivity(
@@ -135,7 +143,7 @@ struct FetchRecord: Codable {
 
     let categoryIds: [UUID]
     let activityIds: [UUID]
-    
+
     init(
         recordId: UUID? = nil,
         fetchDateCase: FetchRecordDateCase = .range,
@@ -159,7 +167,7 @@ struct UpdateRecord: Codable {
     let startedAt: Date?
     let endedAt: Date?
     let note: String?
-    
+
     init(
         recordId: UUID,
         activityId: UUID? = nil,
@@ -176,21 +184,10 @@ struct UpdateRecord: Codable {
 }
 
 struct DeleteRecord: Codable {
-    let recordId: UUID?
-    let activityId: UUID?
-    let startedAt: Date?
-    let endedAt: Date?
-    
-    init(
-        recordId: UUID? = nil,
-        activityId: UUID? = nil,
-        startedAt: Date? = nil,
-        endedAt: Date? = nil
-    ) {
-        self.recordId = recordId
-        self.activityId = activityId
-        self.startedAt = startedAt
-        self.endedAt = endedAt
+    let id: UUID?
+
+    init(id: UUID? = nil) {
+        self.id = id
     }
 }
 
