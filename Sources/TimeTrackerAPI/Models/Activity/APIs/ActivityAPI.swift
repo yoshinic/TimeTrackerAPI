@@ -33,12 +33,6 @@ extension ActivityModel {
                 if let categoryId = data.categoryId {
                     and.filter(\.$category.$id == categoryId)
                 }
-                if let name = data.name {
-                    and.filter(\.$name == name)
-                }
-                if let color = data.color {
-                    and.filter(\.$color == color)
-                }
             }
             .sort(\.$order)
             .all()
@@ -92,12 +86,6 @@ extension ActivityModel {
                 if let categoryId = data.categoryId {
                     and.filter(\.$category.$id == categoryId)
                 }
-                if let name = data.name {
-                    and.filter(\.$name == name)
-                }
-                if let color = data.color {
-                    and.filter(\.$color == color)
-                }
             }
             .delete()
     }
@@ -117,14 +105,14 @@ extension ActivityModel {
 
 struct CreateActivity: Codable {
     let id: UUID?
-    let categoryId: UUID
+    let categoryId: UUID?
     let name: String
     let color: String
     let order: Int
 
     init(
         id: UUID? = nil,
-        categoryId: UUID,
+        categoryId: UUID?,
         name: String,
         color: String,
         order: Int
@@ -140,19 +128,13 @@ struct CreateActivity: Codable {
 struct FetchActivity: Codable {
     let id: UUID?
     let categoryId: UUID?
-    let name: String?
-    let color: String?
 
     init(
         id: UUID? = nil,
-        categoryId: UUID? = nil,
-        name: String? = nil,
-        color: String? = nil
+        categoryId: UUID? = nil
     ) {
         self.id = id
         self.categoryId = categoryId
-        self.name = name
-        self.color = color
     }
 }
 
@@ -181,18 +163,12 @@ struct UpdateActivity: Codable {
 struct DeleteActivity: Codable {
     let id: UUID?
     let categoryId: UUID?
-    let name: String?
-    let color: String?
 
     init(
         id: UUID?,
-        categoryId: UUID? = nil,
-        name: String? = nil,
-        color: String? = nil
+        categoryId: UUID? = nil
     ) {
         self.id = id
         self.categoryId = categoryId
-        self.name = name
-        self.color = color
     }
 }

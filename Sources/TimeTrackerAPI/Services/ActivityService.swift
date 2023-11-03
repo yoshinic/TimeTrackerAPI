@@ -14,7 +14,7 @@ public class ActivityService {
     @discardableResult
     public func create(
         id: UUID? = nil,
-        categoryId: UUID,
+        categoryId: UUID?,
         name: String,
         color: String
     ) async throws -> ActivityData {
@@ -36,18 +36,11 @@ public class ActivityService {
 
     public func fetch(
         id: UUID? = nil,
-        categoryId: UUID? = nil,
-        name: String? = nil,
-        color: String? = nil
+        categoryId: UUID? = nil
     ) async throws -> [ActivityData] {
         try await ActivityModel
             .fetch(
-                .init(
-                    id: id,
-                    categoryId: categoryId,
-                    name: name,
-                    color: color
-                ),
+                .init(id: id, categoryId: categoryId),
                 on: db
             )
             .map { $0.toData }
@@ -84,11 +77,10 @@ public class ActivityService {
 
     public func delete(
         id: UUID? = nil,
-        name: String? = nil,
-        color: String? = nil
+        name: String? = nil
     ) async throws {
         try await ActivityModel.delete(
-            .init(id: id, name: name, color: color),
+            .init(id: id),
             on: db
         )
     }
@@ -96,14 +88,14 @@ public class ActivityService {
 
 public struct ActivityData: Codable, Identifiable {
     public let id: UUID
-    public let category: CategoryData
+    public let category: CategoryData?
     public let name: String
     public let color: String
     public let order: Int
 
     public init(
         id: UUID,
-        category: CategoryData,
+        category: CategoryData?,
         name: String,
         color: String,
         order: Int
@@ -122,7 +114,7 @@ extension ActivityModel {
     var toData: ActivityData {
         ActivityData(
             id: self.id!,
-            category: self.$category.wrappedValue.toData,
+            category: self.$category.wrappedValue?.toData,
             name: self.name,
             color: self.color,
             order: self.order

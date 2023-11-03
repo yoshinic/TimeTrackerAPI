@@ -4,7 +4,7 @@ final class ActivityModel: Model {
     static let schema = "activities"
 
     static let defaultId: UUID = .init()
-    
+
     enum FieldKeys {
         enum v1 {
             static var categoryId: FieldKey { "category_id" }
@@ -16,10 +16,10 @@ final class ActivityModel: Model {
 
     @ID()
     var id: UUID?
-    
-    @Parent(key: FieldKeys.v1.categoryId)
-    var category: CategoryModel
-    
+
+    @OptionalParent(key: FieldKeys.v1.categoryId)
+    var category: CategoryModel?
+
     @Field(key: FieldKeys.v1.name)
     var name: String
 
@@ -36,7 +36,7 @@ final class ActivityModel: Model {
 
     init(
         _ id: ActivityModel.IDValue? = nil,
-        categoryId: CategoryModel.IDValue,
+        categoryId: CategoryModel.IDValue?,
         name: String,
         color: String,
         order: Int

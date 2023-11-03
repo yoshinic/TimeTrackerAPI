@@ -15,9 +15,13 @@ final class CategoryTests: AbstractionXCTestCase {
 
         let name = "sample"
         let color = "#FFFFFF"
-        let new = try await service.create(name: name, color: color)
+        let new = try await service.create(
+            name: name,
+            color: color,
+            icon: ""
+        )
 
-        let found = try await service.fetch(name: name, color: color).first
+        let found = try await service.fetch(name: name).first
 
         XCTAssertTrue(new?.name == found?.name)
     }
@@ -27,16 +31,25 @@ final class CategoryTests: AbstractionXCTestCase {
 
         let name = "sample"
         let color = "#FFFFFF"
-        
+
         guard
-            let new = try await service.create(name: name, color: color)
+            let new = try await service.create(
+                name: name,
+                color: color,
+                icon: ""
+            )
         else {
             return  XCTFail("")
         }
 
         let category = try await CategoryModel
             .create(
-                .init(name: name, color: color, order: 10),
+                .init(
+                    name: name,
+                    color: color,
+                    icon: "",
+                    order: 10
+                ),
                 on: dbm.db
             )
 

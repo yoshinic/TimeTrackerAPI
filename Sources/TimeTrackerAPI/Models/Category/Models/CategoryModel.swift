@@ -4,12 +4,11 @@ import FluentKit
 final class CategoryModel: Model {
     static let schema = "categories"
 
-    static let defaultId: UUID = .init()
-
     enum FieldKeys {
         enum v1 {
             static var name: FieldKey { "name" }
             static var color: FieldKey { "color" }
+            static var icon: FieldKey { "icon" }
             static var order: FieldKey { "order" }
         }
     }
@@ -23,6 +22,9 @@ final class CategoryModel: Model {
     @Field(key: FieldKeys.v1.color)
     var color: String
 
+    @OptionalField(key: FieldKeys.v1.icon)
+    var icon: String?
+
     @Field(key: FieldKeys.v1.order)
     var order: Int
 
@@ -35,11 +37,13 @@ final class CategoryModel: Model {
         _ id: CategoryModel.IDValue? = nil,
         name: String,
         color: String,
+        icon: String?,
         order: Int
     ) {
         self.id = id
         self.name = name
         self.color = color
+        self.icon = icon
         self.order = order
     }
 }

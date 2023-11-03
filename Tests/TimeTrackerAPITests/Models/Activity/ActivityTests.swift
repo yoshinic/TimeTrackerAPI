@@ -15,15 +15,22 @@ final class ActivityTests: AbstractionXCTestCase {
             let category = try await CategoryModel.query(on: dbm.db).first()
         else { throw AppError.notFound }
 
+        let id = UUID()
         let name = "study"
         let newActivity = try await ActivityModel.create(
-            .init(id: UUID(), categoryId: category.id!, name: name, color: "#000000", order: 1),
+            .init(
+                id: id,
+                categoryId: category.id!,
+                name: name,
+                color: "#000000",
+                order: 1
+            ),
             on: dbm.db
         )
 
         guard
             let found = try await ActivityModel
-            .fetch(.init(id: nil, name: name, color: nil), on: dbm.db)
+                .fetch(.init(id: id), on: dbm.db)
             .first
         else {
             return  XCTFail("")
@@ -108,7 +115,7 @@ final class ActivityTests: AbstractionXCTestCase {
         XCTAssertTrue(
             new.name == name
                 && new.color == color
-                && new.category.name == category.name
+                && new.category?.name == category.name
         )
     }
 
@@ -136,6 +143,6 @@ final class ActivityTests: AbstractionXCTestCase {
             .fetch(.init(categoryId: category.id!), on: dbm.db)
 
         XCTAssertTrue(found.count - a.count == 1)
-        XCTAssertTrue(found[0].$category.wrappedValue.name == category.name)
+        XCTAssertTrue(found[0].$category.wrappedValue?.name == category.name)
     }
 }

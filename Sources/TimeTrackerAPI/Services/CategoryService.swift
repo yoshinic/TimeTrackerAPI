@@ -1,8 +1,6 @@
 import FluentKit
 
 public class CategoryService {
-    public static let defaultId: UUID = CategoryModel.defaultId
-
     private let db: Database
 
     init(db: Database) {
@@ -13,7 +11,8 @@ public class CategoryService {
     public func create(
         id: UUID? = nil,
         name: String,
-        color: String
+        color: String,
+        icon: String?
     ) async throws -> CategoryData? {
         try await CategoryModel
             .create(
@@ -21,6 +20,7 @@ public class CategoryService {
                     id: id,
                     name: name,
                     color: color,
+                    icon: icon,
                     order: await CategoryModel.count(on: db) + 1
                 ),
                 on: db
@@ -30,14 +30,10 @@ public class CategoryService {
 
     public func fetch(
         id: UUID? = nil,
-        name: String? = nil,
-        color: String? = nil
+        name: String? = nil
     ) async throws -> [CategoryData] {
         try await CategoryModel
-            .fetch(
-                .init(id: id, name: name, color: color),
-                on: db
-            )
+            .fetch(.init(id: id, name: name), on: db)
             .map { $0.toData }
     }
 
@@ -46,6 +42,7 @@ public class CategoryService {
         id: UUID,
         name: String? = nil,
         color: String? = nil,
+        icon: String? = nil,
         order: Int? = nil
     ) async throws -> CategoryData {
         try await CategoryModel
@@ -54,6 +51,7 @@ public class CategoryService {
                     id: id,
                     name: name,
                     color: color,
+                    icon: icon,
                     order: order
                 ),
                 on: db
@@ -70,11 +68,10 @@ public class CategoryService {
 
     public func delete(
         id: UUID? = nil,
-        name: String? = nil,
-        color: String? = nil
+        name: String? = nil
     ) async throws {
         try await CategoryModel.delete(
-            .init(id: id, name: name, color: color),
+            .init(id: id, name: name),
             on: db
         )
     }
@@ -84,17 +81,20 @@ public struct CategoryData: Codable, Identifiable {
     public let id: UUID
     public let name: String
     public let color: String
+    public let icon: String?
     public let order: Int
 
     public init(
-        id: UUID,
+        id: UUID = UUID(),
         name: String,
         color: String,
+        icon: String?,
         order: Int
     ) {
         self.id = id
         self.name = name
         self.color = color
+        self.icon = icon
         self.order = order
     }
 }
@@ -107,6 +107,7 @@ extension CategoryModel {
             id: self.id!,
             name: self.name,
             color: self.color,
+            icon: self.icon,
             order: self.order
         )
     }
