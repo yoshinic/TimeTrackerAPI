@@ -34,7 +34,8 @@ enum ActivityMigrations {
             guard
                 let work = try await cs.fetch(name: "仕事").first,
                 let lang = try await cs.fetch(name: "語学").first,
-                let exce = try await cs.fetch(name: "運動").first
+                let exce = try await cs.fetch(name: "運動").first,
+                let othe = try await cs.fetch(name: "その他").first
             else {
                 throw AppError.notFound
             }
@@ -47,6 +48,9 @@ enum ActivityMigrations {
                 (lang.id, "ライティング", "$00AA00"),
                 (exce.id, "ウェイトトレーニング", "$0000AA"),
                 (exce.id, "ランニング", "$0000AA"),
+                (othe.id, "移動", "$AAAA00"),
+                (othe.id, "食事", "$00AAAA"),
+                (othe.id, "睡眠", "$AA00AA"),
             ]
 
             let service = ActivityService(db: db)
