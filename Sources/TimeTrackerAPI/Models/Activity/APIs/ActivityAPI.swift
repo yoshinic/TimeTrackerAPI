@@ -34,6 +34,7 @@ extension ActivityModel {
                     and.filter(\.$category.$id == categoryId)
                 }
             }
+            .sort(CategoryModel.self, \.$order)
             .sort(\.$order)
             .all()
             .compactMap { try assignJoinedCategory(to: $0) }

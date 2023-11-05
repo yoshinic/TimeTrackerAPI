@@ -9,7 +9,7 @@ public class DatabaseServiceManager {
     public var record: RecordService!
 
     private init() {}
-    
+
     public func setDatabase(filePath: String? = nil) async throws {
         try await dbm.setDatabase(filePath: filePath)
         category = .init(db: dbm.db)
