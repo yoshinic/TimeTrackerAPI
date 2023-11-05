@@ -35,7 +35,7 @@ public class ActivityService {
     public func fetch(
         id: UUID? = nil,
         categoryId: UUID? = nil,
-        name: String
+        name: String? = nil
     ) async throws -> [ActivityData] {
         try await ActivityModel
             .fetch(
