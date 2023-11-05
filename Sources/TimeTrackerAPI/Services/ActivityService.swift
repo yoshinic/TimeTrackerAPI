@@ -34,11 +34,12 @@ public class ActivityService {
 
     public func fetch(
         id: UUID? = nil,
-        categoryId: UUID? = nil
+        categoryId: UUID? = nil,
+        name: String
     ) async throws -> [ActivityData] {
         try await ActivityModel
             .fetch(
-                .init(id: id, categoryId: categoryId),
+                .init(id: id, categoryId: categoryId, name: name),
                 on: db
             )
             .map { $0.toData }

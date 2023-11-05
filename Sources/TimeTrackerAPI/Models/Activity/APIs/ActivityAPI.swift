@@ -6,16 +6,25 @@ extension ActivityModel {
         _ data: CreateActivity,
         on db: Database
     ) async throws -> ActivityModel {
-        let newActivity = ActivityModel(
-            data.id,
-            categoryId: data.categoryId,
-            name: data.name,
-            color: data.color,
-            order: data.order
-        )
-        try await newActivity.create(on: db)
-        try await newActivity.$category.load(on: db)
-        return newActivity
+        let founds = try await fetch(.init(name: data.name), on: db)
+
+        switch founds.count {
+        case 0:
+            let newActivity = ActivityModel(
+                data.id,
+                categoryId: data.categoryId,
+                name: data.name,
+                color: data.color,
+                order: data.order
+            )
+            try await newActivity.create(on: db)
+            try await newActivity.$category.load(on: db)
+            return newActivity
+        case 1:
+            return founds[0]
+        default:
+            throw AppError.duplicate
+        }
     }
 
     static func fetch(
@@ -32,6 +41,9 @@ extension ActivityModel {
                 }
                 if let categoryId = data.categoryId {
                     and.filter(\.$category.$id == categoryId)
+                }
+                if let name = data.name {
+                    and.filter(\.$name == name)
                 }
             }
             .sort(CategoryModel.self, \.$order)
@@ -129,13 +141,16 @@ struct CreateActivity: Codable {
 struct FetchActivity: Codable {
     let id: UUID?
     let categoryId: UUID?
+    let name: String?
 
     init(
         id: UUID? = nil,
-        categoryId: UUID? = nil
+        categoryId: UUID? = nil,
+        name: String? = nil
     ) {
         self.id = id
         self.categoryId = categoryId
+        self.name = name
     }
 }
 
