@@ -53,7 +53,7 @@ public class RecordService {
         id: UUID,
         activityId: UUID?,
         startedAt: Date,
-        endedAt: Date,
+        endedAt: Date?,
         note: String
     ) async throws -> RecordData {
         try await RecordModel

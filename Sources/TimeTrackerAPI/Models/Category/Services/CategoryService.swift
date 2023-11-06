@@ -60,7 +60,7 @@ public class CategoryService {
     }
 
     // 与えられた配列の順番通りに order を設定し直す
-    public func updateOrder(categories: [CategoryData]) async throws {
+    public func updateOrder(_ categories: [CategoryData]) async throws {
         for (i, category) in categories.enumerated() {
             try await update(
                 id: category.id,
