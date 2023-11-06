@@ -64,7 +64,7 @@ extension RecordModel {
                         }
                         or.filter(\.$startedAt >= from)
                     }
-                } else if let from = data.to {
+                } else if let to = data.to {
                     and.filter(\.$startedAt < to)
                 }
             }
