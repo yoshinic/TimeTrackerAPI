@@ -42,12 +42,29 @@ extension RecordModel {
                     }
                 }
 
-                and.group(.or) { or in
-                    if let from = data.from {
-                        or.filter(\.$endedAt > from).filter(\.$endedAt == nil)
+                if let from = data.from, let to = data.to {
+                    and.group(.or) { or in
+                        or.group(.and) { and in
+                            and.filter(\.$startedAt < from)
+                            and.group(.or) { or in
+                                or.filter(\.$endedAt > from).filter(\.$endedAt == nil)
+                            }
+                        }
+                        or.group(.and) { and in
+                            and.filter(\.$startedAt >= from).filter(\.$startedAt < to)
+                        }
                     }
-                }
-                if let to = data.to {
+                } else if let from = data.from {
+                    and.group(.or) { or in
+                        or.group(.and) { and in
+                            and.filter(\.$startedAt < from)
+                            and.group(.or) { or in
+                                or.filter(\.$endedAt > from).filter(\.$endedAt == nil)
+                            }
+                        }
+                        or.filter(\.$startedAt >= from)
+                    }
+                } else if let from = data.to {
                     and.filter(\.$startedAt < to)
                 }
             }
