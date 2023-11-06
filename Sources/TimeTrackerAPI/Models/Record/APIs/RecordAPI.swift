@@ -83,18 +83,10 @@ extension RecordModel {
             throw AppError.notFound
         }
 
-        if let activityId = data.activityId {
-            found.$activity.id = activityId
-        }
-        if let startedAt = data.startedAt {
-            found.startedAt = startedAt
-        }
-        if let endedAt = data.endedAt {
-            found.endedAt = endedAt
-        }
-        if let note = data.note {
-            found.note = note
-        }
+        found.$activity.id = data.activityId
+        found.startedAt = data.startedAt
+        found.endedAt = data.endedAt
+        found.note = data.note
 
         try await found.update(on: db)
         try await eagerLoad(to: found, on: db)
@@ -174,16 +166,16 @@ struct FetchRecord: Codable {
 struct UpdateRecord: Codable {
     let id: UUID
     let activityId: UUID?
-    let startedAt: Date?
+    let startedAt: Date
     let endedAt: Date?
-    let note: String?
+    let note: String
 
     init(
         id: UUID,
-        activityId: UUID? = nil,
-        startedAt: Date? = nil,
-        endedAt: Date? = nil,
-        note: String? = nil
+        activityId: UUID?,
+        startedAt: Date,
+        endedAt: Date?,
+        note: String
     ) {
         self.id = id
         self.activityId = activityId

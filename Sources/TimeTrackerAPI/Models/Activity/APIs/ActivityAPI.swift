@@ -67,18 +67,10 @@ extension ActivityModel {
             throw AppError.notFound
         }
 
-        if let categoryId = data.categoryId {
-            found.$category.id = categoryId
-        }
-        if let name = data.name {
-            found.name = name
-        }
-        if let color = data.color {
-            found.color = color
-        }
-        if let order = data.order {
-            found.order = order
-        }
+        found.$category.id = data.categoryId
+        found.name = data.name
+        found.color = data.color
+        found.order = data.order
 
         try await found.update(on: db)
         try await found.$category.load(on: db)
@@ -157,16 +149,16 @@ struct FetchActivity: Codable {
 struct UpdateActivity: Codable {
     let id: UUID
     let categoryId: UUID?
-    let name: String?
-    let color: String?
-    let order: Int?
+    let name: String
+    let color: String
+    let order: Int
 
     init(
         id: UUID,
         categoryId: UUID? = nil,
-        name: String? = nil,
-        color: String? = nil,
-        order: Int? = nil
+        name: String,
+        color: String,
+        order: Int
     ) {
         self.id = id
         self.categoryId = categoryId

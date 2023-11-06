@@ -40,10 +40,10 @@ public class CategoryService {
     @discardableResult
     public func update(
         id: UUID,
-        name: String? = nil,
-        color: String? = nil,
-        icon: String? = nil,
-        order: Int? = nil
+        name: String,
+        color: String,
+        icon: String?,
+        order: Int
     ) async throws -> CategoryData {
         try await CategoryModel
             .update(
@@ -60,9 +60,15 @@ public class CategoryService {
     }
 
     // 与えられた配列の順番通りに order を設定し直す
-    public func updateOrder(ids: [UUID]) async throws {
-        for (i, id) in ids.enumerated() {
-            try await update(id: id, order: i + 1)
+    public func updateOrder(categories: [CategoryData]) async throws {
+        for (i, category) in categories.enumerated() {
+            try await update(
+                id: category.id,
+                name: category.name,
+                color: category.color,
+                icon: category.icon,
+                order: i + 1
+            )
         }
     }
 

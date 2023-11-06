@@ -51,10 +51,10 @@ public class RecordService {
 
     public func update(
         id: UUID,
-        activityId: UUID? = nil,
-        startedAt: Date? = nil,
-        endedAt: Date? = nil,
-        note: String? = nil
+        activityId: UUID?,
+        startedAt: Date,
+        endedAt: Date,
+        note: String
     ) async throws -> RecordData {
         try await RecordModel
             .update(

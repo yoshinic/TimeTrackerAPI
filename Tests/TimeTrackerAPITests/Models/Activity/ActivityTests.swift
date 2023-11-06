@@ -30,7 +30,7 @@ final class ActivityTests: AbstractionXCTestCase {
 
         guard
             let found = try await ActivityModel
-                .fetch(.init(id: id), on: dbm.db)
+            .fetch(.init(id: id), on: dbm.db)
             .first
         else {
             return  XCTFail("")
@@ -86,14 +86,14 @@ final class ActivityTests: AbstractionXCTestCase {
 
         // move
         let service = ActivityService(db: dbm.db)
-        try await service.updateOrder(ids: [founds[1].id!, founds[0].id!])
+        try await service.updateOrder([founds[1].toData, founds[0].toData])
 
         let moved = try await ActivityModel.fetch(on: dbm.db)
         guard
             let moved1 = moved.first(where: { $0.id == new1.id }),
             let moved2 = moved.first(where: { $0.id == new2.id })
         else { return  XCTFail("")  }
-        
+
 //        XCTAssertTrue(moved1.name == n2 && moved1.order == o1)
 //        XCTAssertTrue(moved2.name == n1 && moved2.order == o2)
     }

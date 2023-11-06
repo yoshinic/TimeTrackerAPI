@@ -61,18 +61,10 @@ extension CategoryModel {
             throw AppError.notFound
         }
 
-        if let name = data.name {
-            found.name = name
-        }
-        if let color = data.color {
-            found.color = color
-        }
-        if let icon = data.icon {
-            found.icon = icon
-        }
-        if let order = data.order {
-            found.order = order
-        }
+        found.name = data.name
+        found.color = data.color
+        found.icon = data.icon
+        found.order = data.order
 
         try await found.update(on: db)
         return found
@@ -138,17 +130,17 @@ struct FetchCategory: Codable {
 
 struct UpdateCategory: Codable {
     let id: UUID
-    let name: String?
-    let color: String?
+    let name: String
+    let color: String
     let icon: String?
-    let order: Int?
+    let order: Int
 
     init(
         id: UUID,
-        name: String? = nil,
-        color: String? = nil,
-        icon: String? = nil,
-        order: Int? = nil
+        name: String,
+        color: String,
+        icon: String?,
+        order: Int
     ) {
         self.id = id
         self.name = name
