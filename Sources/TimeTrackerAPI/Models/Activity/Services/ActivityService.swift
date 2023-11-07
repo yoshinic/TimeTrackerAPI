@@ -14,7 +14,8 @@ public class ActivityService {
         id: UUID? = nil,
         categoryId: UUID?,
         name: String,
-        color: String
+        color: String,
+        icon: String
     ) async throws -> ActivityData {
         try await db.transaction {
             try await ActivityModel
@@ -24,6 +25,7 @@ public class ActivityService {
                         categoryId: categoryId,
                         name: name,
                         color: color,
+                        icon: icon,
                         order: await ActivityModel.count(on: $0) + 1
                     ),
                     on: $0
@@ -51,6 +53,7 @@ public class ActivityService {
         categoryId: UUID?,
         name: String,
         color: String,
+        icon: String,
         order: Int
     ) async throws -> ActivityData {
         try await ActivityModel
@@ -60,6 +63,7 @@ public class ActivityService {
                     categoryId: categoryId,
                     name: name,
                     color: color,
+                    icon: icon,
                     order: order
                 ),
                 on: db
@@ -75,6 +79,7 @@ public class ActivityService {
                 categoryId: activity.category?.id,
                 name: activity.name,
                 color: activity.color,
+                icon: activity.icon,
                 order: i + 1
             )
         }
@@ -96,6 +101,7 @@ public struct ActivityData: Codable, Identifiable {
     public let category: CategoryData?
     public let name: String
     public let color: String
+    public let icon: String
     public let order: Int
 
     public init(
@@ -103,12 +109,14 @@ public struct ActivityData: Codable, Identifiable {
         category: CategoryData?,
         name: String,
         color: String,
+        icon: String,
         order: Int
     ) {
         self.id = id
         self.category = category
         self.name = name
         self.color = color
+        self.icon = icon
         self.order = order
     }
 }
@@ -122,6 +130,7 @@ extension ActivityModel {
             category: self.$category.wrappedValue?.toData,
             name: self.name,
             color: self.color,
+            icon: self.icon,
             order: self.order
         )
     }

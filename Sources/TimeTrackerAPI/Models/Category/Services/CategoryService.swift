@@ -12,7 +12,7 @@ public class CategoryService {
         id: UUID? = nil,
         name: String,
         color: String,
-        icon: String?
+        icon: String
     ) async throws -> CategoryData? {
         try await CategoryModel
             .create(
@@ -42,7 +42,7 @@ public class CategoryService {
         id: UUID,
         name: String,
         color: String,
-        icon: String?,
+        icon: String,
         order: Int
     ) async throws -> CategoryData {
         try await CategoryModel
@@ -87,14 +87,14 @@ public struct CategoryData: Codable, Identifiable {
     public let id: UUID
     public let name: String
     public let color: String
-    public let icon: String?
+    public let icon: String
     public let order: Int
 
     public init(
         id: UUID = UUID(),
         name: String,
         color: String,
-        icon: String?,
+        icon: String,
         order: Int
     ) {
         self.id = id

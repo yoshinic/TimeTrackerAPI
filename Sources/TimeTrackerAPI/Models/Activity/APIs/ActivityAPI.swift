@@ -15,6 +15,7 @@ extension ActivityModel {
                 categoryId: data.categoryId,
                 name: data.name,
                 color: data.color,
+                icon: data.icon,
                 order: data.order
             )
             try await newActivity.create(on: db)
@@ -70,6 +71,7 @@ extension ActivityModel {
         found.$category.id = data.categoryId
         found.name = data.name
         found.color = data.color
+        found.icon = data.icon
         found.order = data.order
 
         try await found.update(on: db)
@@ -113,6 +115,7 @@ struct CreateActivity: Codable {
     let categoryId: UUID?
     let name: String
     let color: String
+    let icon: String
     let order: Int
 
     init(
@@ -120,12 +123,14 @@ struct CreateActivity: Codable {
         categoryId: UUID?,
         name: String,
         color: String,
+        icon: String,
         order: Int
     ) {
         self.id = id
         self.categoryId = categoryId
         self.name = name
         self.color = color
+        self.icon = icon
         self.order = order
     }
 }
@@ -151,6 +156,7 @@ struct UpdateActivity: Codable {
     let categoryId: UUID?
     let name: String
     let color: String
+    let icon: String
     let order: Int
 
     init(
@@ -158,12 +164,14 @@ struct UpdateActivity: Codable {
         categoryId: UUID? = nil,
         name: String,
         color: String,
+        icon: String,
         order: Int
     ) {
         self.id = id
         self.categoryId = categoryId
         self.name = name
         self.color = color
+        self.icon = icon
         self.order = order
     }
 }

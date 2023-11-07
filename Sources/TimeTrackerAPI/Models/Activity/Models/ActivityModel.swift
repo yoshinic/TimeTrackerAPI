@@ -8,6 +8,7 @@ final class ActivityModel: Model {
             static var categoryId: FieldKey { "category_id" }
             static var name: FieldKey { "name" }
             static var color: FieldKey { "color" }
+            static var icon: FieldKey { "icon" }
             static var order: FieldKey { "order" }
         }
     }
@@ -24,6 +25,9 @@ final class ActivityModel: Model {
     @Field(key: FieldKeys.v1.color)
     var color: String
 
+    @Field(key: FieldKeys.v1.icon)
+    var icon: String
+
     @Field(key: FieldKeys.v1.order)
     var order: Int
 
@@ -37,12 +41,14 @@ final class ActivityModel: Model {
         categoryId: CategoryModel.IDValue?,
         name: String,
         color: String,
+        icon: String,
         order: Int
     ) {
         self.id = id
         self.$category.id = categoryId
         self.name = name
         self.color = color
+        self.icon = icon
         self.order = order
     }
 }

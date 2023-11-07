@@ -97,14 +97,14 @@ struct CreateCategory: Codable {
     let id: UUID?
     let name: String
     let color: String
-    let icon: String?
+    let icon: String
     let order: Int
 
     init(
         id: UUID? = nil,
         name: String,
         color: String,
-        icon: String?,
+        icon: String,
         order: Int
     ) {
         self.id = id
@@ -132,14 +132,14 @@ struct UpdateCategory: Codable {
     let id: UUID
     let name: String
     let color: String
-    let icon: String?
+    let icon: String
     let order: Int
 
     init(
         id: UUID,
         name: String,
         color: String,
-        icon: String?,
+        icon: String,
         order: Int
     ) {
         self.id = id

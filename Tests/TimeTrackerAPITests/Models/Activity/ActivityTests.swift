@@ -23,6 +23,7 @@ final class ActivityTests: AbstractionXCTestCase {
                 categoryId: category.id!,
                 name: name,
                 color: "#000000",
+                icon: "",
                 order: 1
             ),
             on: dbm.db
@@ -55,6 +56,7 @@ final class ActivityTests: AbstractionXCTestCase {
                 categoryId: category.id!,
                 name: n1,
                 color: "#000000",
+                icon: "",
                 order: o1
             ),
             on: dbm.db
@@ -68,6 +70,7 @@ final class ActivityTests: AbstractionXCTestCase {
                 categoryId: category.id!,
                 name: n2,
                 color: "#000000",
+                icon: "",
                 order: o2
             ),
             on: dbm.db
@@ -109,7 +112,8 @@ final class ActivityTests: AbstractionXCTestCase {
         let new = try await service.create(
             categoryId: category.id!,
             name: name,
-            color: color
+            color: color,
+            icon: ""
         )
 
         XCTAssertTrue(
@@ -134,6 +138,7 @@ final class ActivityTests: AbstractionXCTestCase {
                 categoryId: category.id!,
                 name: name,
                 color: color,
+                icon: "",
                 order: 1
             ),
             on: dbm.db

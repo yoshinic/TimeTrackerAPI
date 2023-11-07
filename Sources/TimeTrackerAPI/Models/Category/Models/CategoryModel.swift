@@ -22,8 +22,8 @@ final class CategoryModel: Model {
     @Field(key: FieldKeys.v1.color)
     var color: String
 
-    @OptionalField(key: FieldKeys.v1.icon)
-    var icon: String?
+    @Field(key: FieldKeys.v1.icon)
+    var icon: String
 
     @Field(key: FieldKeys.v1.order)
     var order: Int
@@ -37,7 +37,7 @@ final class CategoryModel: Model {
         _ id: CategoryModel.IDValue? = nil,
         name: String,
         color: String,
-        icon: String?,
+        icon: String,
         order: Int
     ) {
         self.id = id

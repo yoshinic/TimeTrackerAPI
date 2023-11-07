@@ -22,6 +22,7 @@ final class RecordTests: AbstractionXCTestCase {
                 categoryId: category.id!,
                 name: name,
                 color: "#000000",
+                icon: "",
                 order: 1
             ),
             on: dbm.db
@@ -71,7 +72,8 @@ final class RecordTests: AbstractionXCTestCase {
         let activity = try await activityService.create(
             categoryId: category.id!,
             name: name,
-            color: color
+            color: color,
+            icon: ""
         )
 
         let note = "zzz"

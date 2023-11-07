@@ -9,6 +9,7 @@ enum ActivityMigrations {
                 .field(ActivityModel.FieldKeys.v1.name, .string, .required)
                 .field(ActivityModel.FieldKeys.v1.categoryId, .uuid)
                 .field(ActivityModel.FieldKeys.v1.color, .string, .required)
+                .field(ActivityModel.FieldKeys.v1.icon, .string, .required)
                 .field(ActivityModel.FieldKeys.v1.order, .int, .required)
 
                 .foreignKey(
@@ -40,17 +41,17 @@ enum ActivityMigrations {
                 throw AppError.notFound
             }
 
-            let data: [(cid: UUID?, name: String, color: String)] = [
-                (work.id, "作業", "#AA0000"),
-                (lang.id, "リスニング", "$00AA00"),
-                (lang.id, "リーディング", "$00AA00"),
-                (lang.id, "スピーキング", "$00AA00"),
-                (lang.id, "ライティング", "$00AA00"),
-                (exce.id, "ウェイトトレーニング", "$0000AA"),
-                (exce.id, "ランニング", "$0000AA"),
-                (othe.id, "移動", "$AAAA00"),
-                (othe.id, "食事", "$00AAAA"),
-                (othe.id, "睡眠", "$AA00AA"),
+            let data: [(cid: UUID?, name: String, color: String, icon: String)] = [
+                (work.id, "作業", "#AA0000", ""),
+                (lang.id, "リスニング", "$00AA00", ""),
+                (lang.id, "リーディング", "$00AA00", ""),
+                (lang.id, "スピーキング", "$00AA00", ""),
+                (lang.id, "ライティング", "$00AA00", ""),
+                (exce.id, "ウェイトトレーニング", "$0000AA", ""),
+                (exce.id, "ランニング", "$0000AA", ""),
+                (othe.id, "移動", "$AAAA00", ""),
+                (othe.id, "食事", "$00AAAA", ""),
+                (othe.id, "睡眠", "$AA00AA", ""),
             ]
 
             let service = ActivityService(db: db)
@@ -59,7 +60,8 @@ enum ActivityMigrations {
                 try await service.create(
                     categoryId: e.cid,
                     name: e.name,
-                    color: e.color
+                    color: e.color,
+                    icon: e.icon
                 )
             }
         }

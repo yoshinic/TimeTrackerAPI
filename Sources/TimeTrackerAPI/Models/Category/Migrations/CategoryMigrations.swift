@@ -8,7 +8,7 @@ enum CategoryMigrations {
                 .id()
                 .field(CategoryModel.FieldKeys.v1.name, .string, .required)
                 .field(CategoryModel.FieldKeys.v1.color, .string, .required)
-                .field(CategoryModel.FieldKeys.v1.icon, .string)
+                .field(CategoryModel.FieldKeys.v1.icon, .string, .required)
                 .field(CategoryModel.FieldKeys.v1.order, .int, .required)
 
                 .unique(on: CategoryModel.FieldKeys.v1.name)
