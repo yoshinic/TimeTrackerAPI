@@ -25,10 +25,10 @@ enum CategoryMigrations {
     struct seed: AsyncMigration {
         func prepare(on db: Database) async throws {
             let data: [(name: String, color: String, icon: String)] = [
-                (name: "仕事", color: "#DD0000", icon: "bag"),
-                (name: "語学", color: "#00DD00", icon: "person.3.fill"),
-                (name: "運動", color: "0000DD", icon: "figure.run"),
-                (name: "その他", color: "5555AA", icon: ""),
+                (name: "仕事", color: "#EE0000", icon: "bag"),
+                (name: "語学", color: "#00CC00", icon: "person.line.dotted.person"),
+                (name: "運動", color: "0000DD", icon: "figure.strengthtraining.functional"),
+                (name: "日常", color: "5555AA", icon: "house"),
             ]
 
             let service = CategoryService(db: db)

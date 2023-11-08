@@ -36,22 +36,24 @@ enum ActivityMigrations {
                 let work = try await cs.fetch(name: "仕事").first,
                 let lang = try await cs.fetch(name: "語学").first,
                 let exce = try await cs.fetch(name: "運動").first,
-                let othe = try await cs.fetch(name: "その他").first
+                let daily = try await cs.fetch(name: "日常").first
             else {
                 throw AppError.notFound
             }
 
             let data: [(cid: UUID?, name: String, color: String, icon: String)] = [
-                (work.id, "作業", "#AA0000", ""),
-                (lang.id, "リスニング", "$00AA00", ""),
-                (lang.id, "リーディング", "$00AA00", ""),
-                (lang.id, "スピーキング", "$00AA00", ""),
-                (lang.id, "ライティング", "$00AA00", ""),
-                (exce.id, "ウェイトトレーニング", "$0000AA", ""),
-                (exce.id, "ランニング", "$0000AA", ""),
-                (othe.id, "移動", "$AAAA00", ""),
-                (othe.id, "食事", "$00AAAA", ""),
-                (othe.id, "睡眠", "$AA00AA", ""),
+                (work.id, "作業", "#EE0000", "building"),
+                (work.id, "移動", "#EE0000", "bicycle"),
+                (lang.id, "リスニング", "#00BB00", "ear"),
+                (lang.id, "リーディング", "#00BB00", "book"),
+                (lang.id, "スピーキング", "#00BB00", "ellipsis.bubble"),
+                (lang.id, "ライティング", "#00BB00", "highlighter"),
+                (lang.id, "シャドーイング", "#00BB00", "bubble.left.and.bubble.right"),
+                (exce.id, "ランニング", "#0000AA", "figure.run"),
+                (exce.id, "ウェイトトレーニング", "#0000AA", "figure.strengthtraining.traditional"),
+                (daily.id, "食事", "#00AAAA", "fork.knife"),
+                (daily.id, "睡眠", "#00AAAA", "bed.double"),
+                (daily.id, "買い物", "#00AAAA", "cart"),
             ]
 
             let service = ActivityService(db: db)
