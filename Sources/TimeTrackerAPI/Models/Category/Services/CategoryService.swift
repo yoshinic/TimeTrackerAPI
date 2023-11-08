@@ -81,6 +81,10 @@ public class CategoryService {
             on: db
         )
     }
+
+    public func defaultCategory() async throws -> [CategoryData] {
+        try await CategoryModel.defaultData(on: db).map { $0.toData }
+    }
 }
 
 public struct CategoryData: Codable, Identifiable {
@@ -108,6 +112,18 @@ public struct CategoryData: Codable, Identifiable {
 extension CategoryData: Hashable {}
 
 extension CategoryModel {
+    var toData: CategoryData {
+        CategoryData(
+            id: self.id!,
+            name: self.name,
+            color: self.color,
+            icon: self.icon,
+            order: self.order
+        )
+    }
+}
+
+extension DefaultCategoryModel {
     var toData: CategoryData {
         CategoryData(
             id: self.id!,

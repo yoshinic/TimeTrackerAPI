@@ -94,6 +94,10 @@ public class ActivityService {
             on: db
         )
     }
+    
+    public func defaultData() async throws -> [ActivityData] {
+        try await ActivityModel.defaultData(on: db).map { $0.toData }
+    }
 }
 
 public struct ActivityData: Codable, Identifiable {
@@ -124,6 +128,19 @@ public struct ActivityData: Codable, Identifiable {
 extension ActivityData: Hashable {}
 
 extension ActivityModel {
+    var toData: ActivityData {
+        ActivityData(
+            id: self.id!,
+            category: self.$category.wrappedValue?.toData,
+            name: self.name,
+            color: self.color,
+            icon: self.icon,
+            order: self.order
+        )
+    }
+}
+
+extension DefaultActivityModel {
     var toData: ActivityData {
         ActivityData(
             id: self.id!,

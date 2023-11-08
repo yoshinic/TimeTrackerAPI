@@ -24,16 +24,18 @@ enum CategoryMigrations {
 
     struct seed: AsyncMigration {
         func prepare(on db: Database) async throws {
-            let data: [(name: String, color: String, icon: String)] = [
-                (name: "仕事", color: "#EE0000", icon: "bag"),
-                (name: "語学", color: "#00CC00", icon: "person.line.dotted.person"),
-                (name: "運動", color: "0000DD", icon: "figure.strengthtraining.functional"),
-                (name: "日常", color: "5555AA", icon: "house"),
-            ]
-
-            let service = CategoryService(db: db)
-            for e in data {
-                try await service.create(name: e.name, color: e.color, icon: e.icon)
+            let defaultCategories = try await DefaultCategoryModel.query(on: db).all()
+            for category in defaultCategories {
+                try await CategoryModel.create(
+                    .init(
+                        id: category.id,
+                        name: category.name,
+                        color: category.color,
+                        icon: category.icon,
+                        order: category.order
+                    ),
+                    on: db
+                )
             }
         }
 

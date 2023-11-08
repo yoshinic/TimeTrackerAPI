@@ -101,6 +101,10 @@ extension ActivityModel {
         try await ActivityModel.query(on: db).count()
     }
 
+    static func defaultData(on db: Database) async throws -> [DefaultActivityModel] {
+        try await DefaultActivityModel.query(on: db).all()
+    }
+
     @discardableResult
     static func assignJoinedCategory(
         to activity: ActivityModel?
