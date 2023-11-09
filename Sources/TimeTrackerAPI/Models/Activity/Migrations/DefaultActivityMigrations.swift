@@ -56,22 +56,36 @@ enum DefaultActivityMigrations {
                 (daily.id, "買い物", "#00AAAA", "cart"),
             ]
 
-            var order = 0
+            var order = 1
             var categoryId: UUID? = nil
             for e in data {
                 if e.cid != categoryId {
-                    order = 0
+                    order = 1
                     categoryId = e.cid
                 }
 
-                let m: DefaultActivityModel = .init(
-                    categoryId: e.cid,
-                    name: e.name,
-                    color: e.color,
-                    icon: e.icon,
-                    order: order + 1
-                )
-                try await m.save(on: db)
+                if
+                    let found = try await DefaultActivityModel
+                    .query(on: db)
+                    .filter(\.$category.$id == e.cid!)
+                    .filter(\.$name == e.name)
+                    .first()
+                {
+                    found.color = e.color
+                    found.icon = e.icon
+                    found.order = order
+
+                    try await found.update(on: db)
+                } else {
+                    let m: DefaultActivityModel = .init(
+                        categoryId: e.cid,
+                        name: e.name,
+                        color: e.color,
+                        icon: e.icon,
+                        order: order
+                    )
+                    try await m.create(on: db)
+                }
 
                 order += 1
             }

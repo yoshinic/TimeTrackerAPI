@@ -21,7 +21,27 @@ enum DefaultMusclePartMigrations {
     }
 
     struct seed: AsyncMigration {
-        func prepare(on db: Database) async throws {}
+        func prepare(on db: Database) async throws {
+            let data: [String] = [
+                "首", "肩", "胸", "上背", "脇", "腕", "前腕",
+                "腹", "下背", "大腿", "膝", "下腿",
+            ]
+
+            for (i, s) in data.enumerated() {
+                if
+                    let found = try await DefaultMusclePartModel
+                    .query(on: db)
+                    .filter(\.$name == s)
+                    .first()
+                {
+                    found.order = i + 1
+                    try await found.update(on: db)
+                } else {
+                    let m = DefaultMusclePartModel(name: s, order: i + 1)
+                    try await m.create(on: db)
+                }
+            }
+        }
 
         func revert(on db: Database) async throws {}
     }

@@ -6,9 +6,6 @@ enum MuscleMigrations {
             try await db
                 .schema(MuscleModel.schema)
                 .id()
-                .field(MuscleModel.FieldKeys.v1.name, .string, .required)
-                .field(MuscleModel.FieldKeys.v1.muscleDetail, .string, .required)
-                .field(MuscleModel.FieldKeys.v1.ruby, .string, .required)
                 .field(
                     MuscleModel.FieldKeys.v1.musclePartId,
                     .uuid,
@@ -18,6 +15,9 @@ enum MuscleMigrations {
                     MuscleModel.FieldKeys.v1.musclePartDetailId,
                     .uuid
                 )
+                .field(MuscleModel.FieldKeys.v1.name, .string, .required)
+                .field(MuscleModel.FieldKeys.v1.muscleDetail, .string, .required)
+                .field(MuscleModel.FieldKeys.v1.ruby, .string, .required)
                 .field(MuscleModel.FieldKeys.v1.order, .int, .required)
 
                 .foreignKey(
@@ -31,8 +31,11 @@ enum MuscleMigrations {
                     .id
                 )
 
-                .unique(on: MuscleModel.FieldKeys.v1.name,
-                        MuscleModel.FieldKeys.v1.muscleDetail)
+                .unique(
+                    on:
+                    MuscleModel.FieldKeys.v1.name,
+                    MuscleModel.FieldKeys.v1.muscleDetail
+                )
 
                 .ignoreExisting()
                 .create()
@@ -44,7 +47,26 @@ enum MuscleMigrations {
     }
 
     struct seed: AsyncMigration {
-        func prepare(on db: Database) async throws {}
+        func prepare(on db: Database) async throws {
+            let a = try await DefaultMuscleModel.query(on: db).all()
+            for e in a {
+                guard
+                    try await MuscleModel.find(e.id, on: db) == nil
+                else { continue }
+
+                let m = MuscleModel(
+                    e.id,
+                    musclePartId: e.$musclePart.id,
+                    musclePartDetailId: e.$musclePartDetail.id,
+                    name: e.name,
+                    muscleDetail: e.muscleDetail,
+                    ruby: e.ruby,
+                    order: e.order
+                )
+
+                try await m.create(on: db)
+            }
+        }
 
         func revert(on db: Database) async throws {}
     }

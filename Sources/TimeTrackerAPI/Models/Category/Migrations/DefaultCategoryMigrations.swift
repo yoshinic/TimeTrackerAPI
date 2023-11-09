@@ -32,13 +32,25 @@ enum DefaultCategoryMigrations {
             ]
 
             for (i, e) in data.enumerated() {
-                let m: DefaultCategoryModel = .init(
-                    name: e.name,
-                    color: e.color,
-                    icon: e.icon,
-                    order: i + 1
-                )
-                try await m.save(on: db)
+                if
+                    let found = try await DefaultCategoryModel
+                    .query(on: db)
+                    .filter(\.$name == e.name)
+                    .first()
+                {
+                    found.color = e.color
+                    found.icon = e.icon
+                    found.order = i + 1
+                    try await found.update(on: db)
+                } else {
+                    let m: DefaultCategoryModel = .init(
+                        name: e.name,
+                        color: e.color,
+                        icon: e.icon,
+                        order: i + 1
+                    )
+                    try await m.create(on: db)
+                }
             }
         }
 

@@ -35,9 +35,13 @@ enum ActivityMigrations {
                 .query(on: db)
                 .all()
             for activity in defaultActivities {
+                guard
+                    let aid = activity.id,
+                    try await ActivityModel.find(aid, on: db) == nil
+                else { continue }
                 try await ActivityModel.create(
                     .init(
-                        id: activity.id,
+                        id: aid,
                         categoryId: activity.$category.id,
                         name: activity.name,
                         color: activity.color,

@@ -26,9 +26,14 @@ enum CategoryMigrations {
         func prepare(on db: Database) async throws {
             let defaultCategories = try await DefaultCategoryModel.query(on: db).all()
             for category in defaultCategories {
+                guard
+                    let cid = category.id,
+                    try await CategoryModel.find(cid, on: db) == nil
+                else { continue }
+                
                 try await CategoryModel.create(
                     .init(
-                        id: category.id,
+                        id: cid,
                         name: category.name,
                         color: category.color,
                         icon: category.icon,
@@ -39,11 +44,6 @@ enum CategoryMigrations {
             }
         }
 
-        func revert(on db: Database) async throws {
-//            let service = CategoryService(db: db)
-//            for e in data.reversed() {
-//                try await service.delete(name: e.name)
-//            }
-        }
+        func revert(on db: Database) async throws {}
     }
 }

@@ -22,7 +22,21 @@ enum TrainingMenuMigrations {
     }
 
     struct seed: AsyncMigration {
-        func prepare(on db: Database) async throws {}
+        func prepare(on db: Database) async throws {
+            let a = try await DefaultTrainingMenuModel.query(on: db).all()
+            for e in a {
+                guard
+                    try await TrainingMenuModel.find(e.id, on: db) == nil
+                else { continue }
+
+                try await TrainingMenuModel(
+                    e.id,
+                    name: e.name,
+                    aerobic: e.aerobic,
+                    order: e.order
+                ).create(on: db)
+            }
+        }
 
         func revert(on db: Database) async throws {}
     }

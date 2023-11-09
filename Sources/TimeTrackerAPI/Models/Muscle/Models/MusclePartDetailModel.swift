@@ -35,6 +35,7 @@ final class MusclePartDetailModel: Model {
         name: String,
         order: Int
     ) {
+        self.id = id
         self.$musclePart.id = musclePartId
         self.name = name
         self.order = order

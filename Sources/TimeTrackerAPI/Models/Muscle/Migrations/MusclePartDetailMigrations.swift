@@ -44,7 +44,22 @@ enum MusclePartDetailMigrations {
     }
 
     struct seed: AsyncMigration {
-        func prepare(on db: Database) async throws {}
+        func prepare(on db: Database) async throws {
+            let a = try await DefaultMusclePartDetailModel.query(on: db).all()
+            for e in a {
+                guard
+                    try await MusclePartDetailModel.find(e.id, on: db) == nil
+                else { continue }
+
+                let m = MusclePartDetailModel(
+                    e.id,
+                    musclePartId: e.$musclePart.id,
+                    name: e.name,
+                    order: e.order
+                )
+                try await m.create(on: db)
+            }
+        }
 
         func revert(on db: Database) async throws {}
     }
