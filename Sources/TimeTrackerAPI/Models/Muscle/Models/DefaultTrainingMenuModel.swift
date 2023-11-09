@@ -24,7 +24,7 @@ final class DefaultTrainingMenuModel: Model {
     @Field(key: FieldKeys.v1.order)
     var order: Int
 
-    @Children(for: \.$id.$menu)
+    @Children(for: \.$menu)
     var trainingMuscleParts: [DefaultTrainingMusclePartModel]
 
     init() {}

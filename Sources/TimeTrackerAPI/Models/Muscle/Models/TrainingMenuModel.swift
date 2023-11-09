@@ -24,11 +24,11 @@ final class TrainingMenuModel: Model {
     @Field(key: FieldKeys.v1.order)
     var order: Int
 
-    @Children(for: \.$id.$menu)
+    @Children(for: \.$menu)
     var trainingMuscleParts: [TrainingMusclePartModel]
 
     @Children(for: \.$menu)
-    var menus: [TrainingRecordModel]
+    var records: [TrainingRecordModel]
 
     init() {}
 

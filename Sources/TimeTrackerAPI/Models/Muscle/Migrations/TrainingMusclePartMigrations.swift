@@ -5,6 +5,7 @@ enum TrainingMusclePartMigrations {
         func prepare(on db: Database) async throws {
             try await db
                 .schema(TrainingMusclePartModel.schema)
+                .id()
                 .field(
                     TrainingMusclePartModel.FieldKeys.v1.menuId,
                     .uuid,
@@ -21,8 +22,8 @@ enum TrainingMusclePartMigrations {
                     .required
                 )
 
-                .compositeIdentifier(
-                    over:
+                .unique(
+                    on:
                     TrainingMusclePartModel.FieldKeys.v1.menuId,
                     TrainingMusclePartModel.FieldKeys.v1.muscleId
                 )

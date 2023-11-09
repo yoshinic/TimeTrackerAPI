@@ -12,36 +12,14 @@ final class MusclePartDetailModel: Model {
         }
     }
 
-    final class IDValue: Fields, Hashable {
-        @Parent(key: FieldKeys.v1.musclePartId)
-        var musclePart: MusclePartModel
+    @ID()
+    var id: UUID?
 
-        @Field(key: FieldKeys.v1.name)
-        var name: String
+    @Parent(key: FieldKeys.v1.musclePartId)
+    var musclePart: MusclePartModel
 
-        init() {}
-
-        init(
-            musclePartId: MusclePartModel.IDValue,
-            name: String
-        ) {
-            self.$musclePart.id = musclePartId
-            self.name = name
-        }
-
-        static func == (lhs: IDValue, rhs: IDValue) -> Bool {
-            lhs.$musclePart.id == rhs.$musclePart.id
-                && lhs.name == rhs.name
-        }
-
-        func hash(into hasher: inout Hasher) {
-            hasher.combine($musclePart.id)
-            hasher.combine(name)
-        }
-    }
-
-    @CompositeID()
-    var id: IDValue?
+    @Field(key: FieldKeys.v1.name)
+    var name: String
 
     @Field(key: FieldKeys.v1.order)
     var order: Int
@@ -52,14 +30,13 @@ final class MusclePartDetailModel: Model {
     init() {}
 
     init(
+        _ id: MusclePartDetailModel.IDValue? = nil,
         musclePartId: MusclePartModel.IDValue,
         name: String,
         order: Int
     ) {
-        self.id = .init(
-            musclePartId: musclePartId,
-            name: name
-        )
+        self.$musclePart.id = musclePartId
+        self.name = name
         self.order = order
     }
 }

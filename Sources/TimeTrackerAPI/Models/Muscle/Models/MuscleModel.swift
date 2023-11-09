@@ -36,7 +36,7 @@ final class MuscleModel: Model {
     @Field(key: FieldKeys.v1.order)
     var order: Int
 
-    @Children(for: \.$id.$muscle)
+    @Children(for: \.$muscle)
     var trainingMuscleParts: [TrainingMusclePartModel]
     
     init() {}

@@ -20,7 +20,7 @@ final class MusclePartModel: Model {
     @Field(key: FieldKeys.v1.order)
     var order: Int
 
-    @ChildrenProperty(for: \.$id.$musclePart)
+    @ChildrenProperty(for: \.$musclePart)
     var details: [MusclePartDetailModel]
     
     @ChildrenProperty(for: \.$musclePart)
