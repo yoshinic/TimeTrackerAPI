@@ -7,6 +7,9 @@ final class TrainingRecordModel: Model {
     enum FieldKeys {
         enum v1 {
             static var menuId: FieldKey { "menu_id" }
+            static var startedAt: FieldKey { "started_at" }
+            static var endedAt: FieldKey { "ended_at" }
+            static var enddate: FieldKey { "date" }
             static var set: FieldKey { "set" }
             static var weight: FieldKey { "weight" }
             static var number: FieldKey { "number" }
@@ -22,6 +25,12 @@ final class TrainingRecordModel: Model {
     @Parent(key: FieldKeys.v1.menuId)
     var menu: TrainingMenuModel
 
+    @Field(key: FieldKeys.v1.startedAt)
+    var startedAt: Date
+
+    @OptionalField(key: FieldKeys.v1.endedAt)
+    var endedAt: Date?
+    
     @Field(key: FieldKeys.v1.set)
     var set: Int
 
@@ -45,6 +54,8 @@ final class TrainingRecordModel: Model {
     init(
         _ id: TrainingRecordModel.IDValue? = nil,
         menuId: TrainingMenuModel.IDValue,
+        startedAt: Date,
+        endedAt: Date?,
         set: Int,
         weight: Float,
         number: Int,
@@ -54,6 +65,8 @@ final class TrainingRecordModel: Model {
     ) {
         self.id = id
         self.$menu.id = menuId
+        self.startedAt = startedAt
+        self.endedAt = endedAt
         self.set = set
         self.weight = weight
         self.number = number

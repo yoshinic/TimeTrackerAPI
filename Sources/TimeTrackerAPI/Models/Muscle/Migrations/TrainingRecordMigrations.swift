@@ -7,6 +7,8 @@ enum TrainingRecordMigrations {
                 .schema(TrainingRecordModel.schema)
                 .id()
                 .field(TrainingRecordModel.FieldKeys.v1.menuId, .uuid, .required)
+                .field(TrainingRecordModel.FieldKeys.v1.startedAt, .datetime, .required)
+                .field(TrainingRecordModel.FieldKeys.v1.endedAt, .datetime)
                 .field(TrainingRecordModel.FieldKeys.v1.set, .int, .required)
                 .field(TrainingRecordModel.FieldKeys.v1.weight, .float, .required)
                 .field(TrainingRecordModel.FieldKeys.v1.number, .int, .required)
