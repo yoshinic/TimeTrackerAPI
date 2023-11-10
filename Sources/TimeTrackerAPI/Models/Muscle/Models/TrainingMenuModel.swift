@@ -1,5 +1,5 @@
-import Foundation
 import FluentKit
+import Foundation
 
 final class TrainingMenuModel: Model {
     static let schema = "training_menus"
@@ -7,6 +7,7 @@ final class TrainingMenuModel: Model {
     enum FieldKeys {
         enum v1 {
             static var name: FieldKey { "name" }
+            static var mainPart: FieldKey { "main_part" }
             static var aerobic: FieldKey { "aerobic" }
             static var order: FieldKey { "order" }
         }
@@ -17,6 +18,9 @@ final class TrainingMenuModel: Model {
 
     @Field(key: FieldKeys.v1.name)
     var name: String
+
+    @Parent(key: FieldKeys.v1.mainPart)
+    var mainPart: MusclePartModel
 
     @Field(key: FieldKeys.v1.aerobic)
     var aerobic: Bool
@@ -35,11 +39,13 @@ final class TrainingMenuModel: Model {
     init(
         _ id: TrainingMenuModel.IDValue? = nil,
         name: String,
+        mainPartId: MusclePartModel.IDValue,
         aerobic: Bool,
         order: Int
     ) {
         self.id = id
         self.name = name
+        self.$mainPart.id = mainPartId
         self.aerobic = aerobic
         self.order = order
     }

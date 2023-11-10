@@ -23,8 +23,8 @@ enum DefaultMusclePartMigrations {
     struct seed: AsyncMigration {
         func prepare(on db: Database) async throws {
             let data: [String] = [
-                "首", "肩", "胸", "上背", "脇", "腕", "前腕",
-                "腹", "下背", "大腿", "膝", "下腿",
+                "首", "肩", "胸", "上背", "脇", "上腕二頭筋", "上腕三頭筋", "前腕",
+                "腹", "下背", "大腿", "膝", "下腿", "その他",
             ]
 
             for (i, s) in data.enumerated() {

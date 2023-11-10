@@ -26,6 +26,9 @@ final class DefaultMusclePartModel: Model {
     @ChildrenProperty(for: \.$musclePart)
     var muscles: [DefaultMuscleModel]
 
+    @Children(for: \.$mainPart)
+    var menus: [DefaultTrainingMenuModel]
+    
     init() {}
 
     init(

@@ -58,13 +58,15 @@ enum DefaultMuscleMigrations {
                 let chest = defaultMuscleParts.filter({ $0.name == "胸" }).first?.id,
                 let back1 = defaultMuscleParts.filter({ $0.name == "上背" }).first?.id,
                 let side = defaultMuscleParts.filter({ $0.name == "脇" }).first?.id,
-                let arm1 = defaultMuscleParts.filter({ $0.name == "腕" }).first?.id,
-                let arm2 = defaultMuscleParts.filter({ $0.name == "前腕" }).first?.id,
+                let arm1 = defaultMuscleParts.filter({ $0.name == "上腕二頭筋" }).first?.id,
+                let arm2 = defaultMuscleParts.filter({ $0.name == "上腕三頭筋" }).first?.id,
+                let arm3 = defaultMuscleParts.filter({ $0.name == "前腕" }).first?.id,
                 let stomach = defaultMuscleParts.filter({ $0.name == "腹" }).first?.id,
                 let back2 = defaultMuscleParts.filter({ $0.name == "下背" }).first?.id,
                 let thigh1 = defaultMuscleParts.filter({ $0.name == "大腿" }).first?.id,
                 let knee = defaultMuscleParts.filter({ $0.name == "膝" }).first?.id,
-                let thigh2 = defaultMuscleParts.filter({ $0.name == "下腿" }).first?.id
+                let thigh2 = defaultMuscleParts.filter({ $0.name == "下腿" }).first?.id,
+                let _ = defaultMuscleParts.filter({ $0.name == "その他" }).first?.id
             else { throw AppError.notFound }
 
             let dmpds = try await DefaultMusclePartDetailModel
@@ -109,19 +111,19 @@ enum DefaultMuscleMigrations {
                 ("鋸筋", "後", "", side, nil),
 
                 ("上腕二頭筋", "", "", arm1, nil),
-                ("上腕三頭筋", "", "", arm1, nil),
                 ("上腕筋", "", "", arm1, nil),
+                ("上腕三頭筋", "", "", arm2, nil),
 
-                ("腕橈骨筋", "", "", arm2, nil),
-                ("烏口腕筋", "", "", arm2, nil),
-                ("長掌筋", "", "", arm2, nil),
-                ("橈侧手根屈筋", "", "", arm2, nil),
-                ("尺侧手根屈筋", "", "", arm2, nil),
-                ("尺側手根伸筋", "", "", arm2, nil),
-                ("長橈側手根伸筋", "", "", arm2, nil),
-                ("総指伸筋", "", "", arm2, nil),
-                ("短橈側手根伸筋", "", "", arm2, nil),
-                ("小指伸筋", "", "", arm2, nil),
+                ("腕橈骨筋", "", "", arm3, nil),
+                ("烏口腕筋", "", "", arm3, nil),
+                ("長掌筋", "", "", arm3, nil),
+                ("橈侧手根屈筋", "", "", arm3, nil),
+                ("尺侧手根屈筋", "", "", arm3, nil),
+                ("尺側手根伸筋", "", "", arm3, nil),
+                ("長橈側手根伸筋", "", "", arm3, nil),
+                ("総指伸筋", "", "", arm3, nil),
+                ("短橈側手根伸筋", "", "", arm3, nil),
+                ("小指伸筋", "", "", arm3, nil),
 
                 ("腹直筋", "上", "", stomach, nil),
                 ("腹直筋", "下", "", stomach, nil),

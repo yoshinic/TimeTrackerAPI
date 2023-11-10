@@ -26,6 +26,9 @@ final class MusclePartModel: Model {
     @ChildrenProperty(for: \.$musclePart)
     var muscles: [MuscleModel]
     
+    @Children(for: \.$mainPart)
+    var menus: [TrainingMenuModel]
+    
     init() {}
 
     init(

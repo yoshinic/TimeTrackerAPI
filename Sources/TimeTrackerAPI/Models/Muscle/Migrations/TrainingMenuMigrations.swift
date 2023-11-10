@@ -7,8 +7,15 @@ enum TrainingMenuMigrations {
                 .schema(TrainingMenuModel.schema)
                 .id()
                 .field(TrainingMenuModel.FieldKeys.v1.name, .string, .required)
+                .field(TrainingMenuModel.FieldKeys.v1.mainPart, .uuid, .required)
                 .field(TrainingMenuModel.FieldKeys.v1.aerobic, .bool, .required)
                 .field(TrainingMenuModel.FieldKeys.v1.order, .int, .required)
+
+                .foreignKey(
+                    TrainingMenuModel.FieldKeys.v1.mainPart,
+                    references: MusclePartModel.schema,
+                    .id
+                )
 
                 .unique(on: TrainingMenuModel.FieldKeys.v1.name)
 
@@ -32,6 +39,7 @@ enum TrainingMenuMigrations {
                 try await TrainingMenuModel(
                     e.id,
                     name: e.name,
+                    mainPartId: e.$mainPart.id,
                     aerobic: e.aerobic,
                     order: e.order
                 ).create(on: db)
