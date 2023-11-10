@@ -6,4 +6,9 @@ public class MuscleService {
     init(db: Database) {
         self.db = db
     }
+    
+    public func fetch() {
+        
+    }
 }
+

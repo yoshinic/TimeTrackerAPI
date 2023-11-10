@@ -39,14 +39,12 @@ enum DefaultTrainingMenuMigrations {
                 let shoulder = defaultMuscleParts.filter({ $0.name == "肩" }).first?.id,
                 let chest = defaultMuscleParts.filter({ $0.name == "胸" }).first?.id,
                 let back1 = defaultMuscleParts.filter({ $0.name == "上背" }).first?.id,
-                let _ = defaultMuscleParts.filter({ $0.name == "脇" }).first?.id,
                 let arm1 = defaultMuscleParts.filter({ $0.name == "上腕二頭筋" }).first?.id,
                 let arm2 = defaultMuscleParts.filter({ $0.name == "上腕三頭筋" }).first?.id,
                 let arm3 = defaultMuscleParts.filter({ $0.name == "前腕" }).first?.id,
                 let stomach = defaultMuscleParts.filter({ $0.name == "腹" }).first?.id,
                 let back2 = defaultMuscleParts.filter({ $0.name == "下背" }).first?.id,
                 let thigh1 = defaultMuscleParts.filter({ $0.name == "大腿" }).first?.id,
-                let _ = defaultMuscleParts.filter({ $0.name == "膝" }).first?.id,
                 let thigh2 = defaultMuscleParts.filter({ $0.name == "下腿" }).first?.id,
                 let other = defaultMuscleParts.filter({ $0.name == "その他" }).first?.id
             else { throw AppError.notFound }
