@@ -33,16 +33,18 @@ final class DefaultTrainingMenuEffectModel: Model {
     }
 }
 
-public struct DefaultTrainingMenuEffectJSON: Codable {
+public struct DefaultTrainingMenuEffectJSON: Codable, Hashable {
     public let data: [DefaultTrainingMenuEffectJSONData]
     init(_ data: [DefaultTrainingMenuEffectJSONData]) {
         self.data = data
     }
 }
 
-public struct DefaultTrainingMenuEffectJSONData: Codable {
+public struct DefaultTrainingMenuEffectJSONData: Codable, Hashable, Identifiable {
+    public var id: UUID { menuId }
     public let menuId: UUID
     public var data: [DefaultMusclePartJSONData]
+
     init(
         _ menuId: DefaultTrainingMenuModel.IDValue,
         _ data: [DefaultMusclePartJSONData]
@@ -52,7 +54,7 @@ public struct DefaultTrainingMenuEffectJSONData: Codable {
     }
 }
 
-public struct DefaultMusclePartJSONData: Codable, Hashable {
+public struct DefaultMusclePartJSONData: Codable, Hashable, Identifiable {
     public let id: UUID
     public let name: String
     public let order: Int
@@ -72,7 +74,7 @@ public struct DefaultMusclePartJSONData: Codable, Hashable {
     }
 }
 
-public struct DefaultMusclePartDetailJSONData: Codable, Hashable {
+public struct DefaultMusclePartDetailJSONData: Codable, Hashable, Identifiable {
     public let id: UUID?
     public let name: String
     public let order: Int
@@ -92,7 +94,7 @@ public struct DefaultMusclePartDetailJSONData: Codable, Hashable {
     }
 }
 
-public struct DefaultTrainingEffectJSONData: Codable, Hashable {
+public struct DefaultTrainingEffectJSONData: Codable, Hashable, Identifiable {
     public let id: UUID?
     public let name: String
     public let detail: String
@@ -124,7 +126,7 @@ public struct DefaultTrainingMenuJSON: Codable, Hashable {
     }
 }
 
-public struct DefaultTrainingPartJSONData: Codable, Hashable {
+public struct DefaultTrainingPartJSONData: Codable, Hashable, Identifiable {
     public let id: UUID
     public let name: String
     public let order: Int
@@ -144,7 +146,7 @@ public struct DefaultTrainingPartJSONData: Codable, Hashable {
     }
 }
 
-public struct DefaultTrainingMenuJSONData: Codable, Hashable {
+public struct DefaultTrainingMenuJSONData: Codable, Hashable, Identifiable {
     public let id: UUID
     public let name: String
     public let aerobic: Bool
