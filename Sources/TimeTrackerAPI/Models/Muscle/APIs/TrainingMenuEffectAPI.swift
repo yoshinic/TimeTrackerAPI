@@ -41,10 +41,6 @@ extension DefaultTrainingMenuEffectModel {
                         \DefaultMuscleModel.$musclePartDetail.$id == nil
                     )
             }
-
-            .sort(\.$order)
-            .sort(DefaultMusclePartDetailModel.self, \.$order)
-            .sort(DefaultMuscleModel.self, \.$order)
             .all()
             .reduce(into: [DefaultTrainingMenuEffectJSONData]()) { res, part in
                 let menuId = try part
@@ -122,6 +118,21 @@ extension DefaultTrainingMenuEffectModel {
                     )
                 }
             }
+            .map {
+                var c = $0
+                c.data = c.data.map {
+                    var b = $0
+                    b.details = b.details.map {
+                        var a = $0
+                        a.effects = $0.effects.sorted { $0.order < $1.order }
+                        return a
+                    }
+                    b.details = b.details.sorted { $0.order < $1.order }
+                    return b
+                }
+                c.data = c.data.sorted { $0.order < $1.order }
+                return c
+            }
     }
 
     private static func createMenus(
@@ -158,9 +169,15 @@ extension DefaultTrainingMenuEffectModel {
                     ))
                 }
             }
+            .map {
+                var a = $0
+                a.menus = a.menus.sorted { $0.order < $1.order }
+                return a
+            }
+            .sorted { $0.order < $1.order }
     }
 
-    static func fetch(
+    public static func fetch(
         on db: Database
     ) async throws -> (
         menus: [DefaultTrainingPartJSONData],

@@ -94,6 +94,8 @@ enum DefaultMuscleMigrations {
                 ("大胸筋", "上", "", chest, nil),
                 ("大胸筋", "下", "", chest, nil),
                 ("小胸筋", "", "", chest, nil),
+                ("鋸筋", "前", "", chest, nil),
+                ("鋸筋", "後", "", chest, nil),
 
                 ("広背筋", "", "", back1, nil),
                 ("僧帽筋", "上", "", back1, nil),
@@ -105,11 +107,9 @@ enum DefaultMuscleMigrations {
                 ("辣上筋", "", "", back1, nil),
                 ("辣下筋", "", "", back1, nil),
 
-                ("鋸筋", "前", "", chest, nil),
-                ("鋸筋", "後", "", chest, nil),
-
                 ("上腕二頭筋", "", "", arm1, nil),
                 ("上腕筋", "", "", arm1, nil),
+
                 ("上腕三頭筋", "", "", arm2, nil),
 
                 ("腕橈骨筋", "", "", arm3, nil),
@@ -154,7 +154,7 @@ enum DefaultMuscleMigrations {
                 ("半膜様筋", "", "", thigh1, id4),
                 ("半腱様筋", "", "", thigh1, id4),
                 ("前骨筋", "", "", thigh1, nil),
-                
+
                 ("腓腹筋", "", "", thigh2, nil),
                 ("ヒラメ筋", "", "", thigh2, nil),
             ]
