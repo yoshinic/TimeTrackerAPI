@@ -34,15 +34,15 @@ final class DefaultTrainingMenuEffectModel: Model {
 }
 
 public struct DefaultTrainingMenuEffectJSON: Codable {
-    let data: [DefaultTrainingMenuEffectJSONData]
+    public let data: [DefaultTrainingMenuEffectJSONData]
     init(_ data: [DefaultTrainingMenuEffectJSONData]) {
         self.data = data
     }
 }
 
 public struct DefaultTrainingMenuEffectJSONData: Codable {
-    let menuId: DefaultTrainingMenuModel.IDValue
-    var data: [DefaultMusclePartJSONData]
+    public let menuId: UUID
+    public var data: [DefaultMusclePartJSONData]
     init(
         _ menuId: DefaultTrainingMenuModel.IDValue,
         _ data: [DefaultMusclePartJSONData]
@@ -53,11 +53,11 @@ public struct DefaultTrainingMenuEffectJSONData: Codable {
 }
 
 public struct DefaultMusclePartJSONData: Codable, Hashable {
-    let id: UUID
-    let name: String
-    let order: Int
+    public let id: UUID
+    public let name: String
+    public let order: Int
 
-    var details: [DefaultMusclePartDetailJSONData]
+    public var details: [DefaultMusclePartDetailJSONData]
 
     init(
         _ id: UUID,
@@ -73,11 +73,11 @@ public struct DefaultMusclePartJSONData: Codable, Hashable {
 }
 
 public struct DefaultMusclePartDetailJSONData: Codable, Hashable {
-    let id: UUID?
-    let name: String
-    let order: Int
+    public let id: UUID?
+    public let name: String
+    public let order: Int
 
-    var effects: [DefaultTrainingEffectJSONData]
+    public var effects: [DefaultTrainingEffectJSONData]
 
     init(
         _ id: UUID? = nil,
@@ -93,12 +93,12 @@ public struct DefaultMusclePartDetailJSONData: Codable, Hashable {
 }
 
 public struct DefaultTrainingEffectJSONData: Codable, Hashable {
-    let id: UUID?
-    let name: String
-    let detail: String
-    let ruby: String
-    let effect: Int
-    let order: Int
+    public let id: UUID?
+    public let name: String
+    public let detail: String
+    public let ruby: String
+    public let effect: Int
+    public let order: Int
 
     init(
         _ id: UUID?,
@@ -118,18 +118,18 @@ public struct DefaultTrainingEffectJSONData: Codable, Hashable {
 }
 
 public struct DefaultTrainingMenuJSON: Codable, Hashable {
-    let data: [DefaultTrainingPartJSONData]
+    public let data: [DefaultTrainingPartJSONData]
     init(_ data: [DefaultTrainingPartJSONData]) {
         self.data = data
     }
 }
 
 public struct DefaultTrainingPartJSONData: Codable, Hashable {
-    let id: UUID
-    let name: String
-    let order: Int
+    public let id: UUID
+    public let name: String
+    public let order: Int
 
-    var menus: [DefaultTrainingMenuJSONData]
+    public var menus: [DefaultTrainingMenuJSONData]
 
     init(
         _ id: UUID,
@@ -145,10 +145,10 @@ public struct DefaultTrainingPartJSONData: Codable, Hashable {
 }
 
 public struct DefaultTrainingMenuJSONData: Codable, Hashable {
-    let id: UUID
-    let name: String
-    let aerobic: Bool
-    let order: Int
+    public let id: UUID
+    public let name: String
+    public let aerobic: Bool
+    public let order: Int
 
     init(
         _ id: UUID,
