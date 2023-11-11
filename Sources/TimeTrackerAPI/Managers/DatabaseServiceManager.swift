@@ -1,5 +1,3 @@
-
-
 public class DatabaseServiceManager {
     public static let shared: DatabaseServiceManager = .init()
 
@@ -7,6 +5,7 @@ public class DatabaseServiceManager {
     public var category: CategoryService!
     public var activity: ActivityService!
     public var record: RecordService!
+    public var muscle: MuscleService!
 
     private init() {}
 
@@ -15,5 +14,6 @@ public class DatabaseServiceManager {
         category = .init(db: dbm.db)
         activity = .init(db: dbm.db)
         record = .init(db: dbm.db)
+        muscle = .init(db: dbm.db)
     }
 }
