@@ -24,9 +24,13 @@ enum AllMigrations {
             try await TrainingMenuMigrations.v1().prepare(on: db)
             try await TrainingMusclePartMigrations.v1().prepare(on: db)
             try await TrainingRecordMigrations.v1().prepare(on: db)
+
+            try await DefaultTrainingMenuEffectMigrations.v1().prepare(on: db)
         }
 
         func revert(on db: Database) async throws  {
+            try await DefaultTrainingMenuEffectMigrations.v1().revert(on: db)
+
             // Muscle
             try await TrainingRecordMigrations.v1().revert(on: db)
             try await TrainingMusclePartMigrations.v1().revert(on: db)
@@ -74,9 +78,13 @@ enum AllMigrations {
             try await TrainingMenuMigrations.seed().prepare(on: db)
             try await TrainingMusclePartMigrations.seed().prepare(on: db)
             try await TrainingRecordMigrations.seed().prepare(on: db)
+
+            try await DefaultTrainingMenuEffectMigrations.seed().prepare(on: db)
         }
 
         func revert(on db: Database) async throws {
+            try await DefaultTrainingMenuEffectMigrations.seed().revert(on: db)
+
             // Muscle
             try await TrainingRecordMigrations.seed().revert(on: db)
             try await TrainingMusclePartMigrations.seed().revert(on: db)
