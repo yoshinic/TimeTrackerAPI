@@ -92,7 +92,10 @@ extension CategoryModel {
         try await CategoryModel.query(on: db).count()
     }
 
-    static func defaultData(on db: Database) async throws -> [DefaultCategoryModel] {
+    static func defaultData(
+        
+        on db: Database
+    ) async throws -> [DefaultCategoryModel] {
         try await DefaultCategoryModel
             .query(on: db)
             .sort(\.$order, .ascending)

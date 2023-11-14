@@ -1,5 +1,5 @@
-import Foundation
 import FluentKit
+import Foundation
 
 final class TrainingRecordModel: Model {
     static let schema = "training_records"
@@ -9,7 +9,6 @@ final class TrainingRecordModel: Model {
             static var menuId: FieldKey { "menu_id" }
             static var startedAt: FieldKey { "started_at" }
             static var endedAt: FieldKey { "ended_at" }
-            static var enddate: FieldKey { "date" }
             static var set: FieldKey { "set" }
             static var weight: FieldKey { "weight" }
             static var number: FieldKey { "number" }
@@ -25,12 +24,12 @@ final class TrainingRecordModel: Model {
     @Parent(key: FieldKeys.v1.menuId)
     var menu: TrainingMenuModel
 
-    @Field(key: FieldKeys.v1.startedAt)
-    var startedAt: Date
+    @OptionalField(key: FieldKeys.v1.startedAt)
+    var startedAt: Date?
 
     @OptionalField(key: FieldKeys.v1.endedAt)
     var endedAt: Date?
-    
+
     @Field(key: FieldKeys.v1.set)
     var set: Int
 
@@ -49,12 +48,15 @@ final class TrainingRecordModel: Model {
     @Field(key: FieldKeys.v1.slope)
     var slope: Float
 
+    @Children(for: \.$trainingRecord)
+    var muscleTrainingRecords: [MuscleTrainingRecordModel]
+    
     init() {}
 
     init(
         _ id: TrainingRecordModel.IDValue? = nil,
         menuId: TrainingMenuModel.IDValue,
-        startedAt: Date,
+        startedAt: Date?,
         endedAt: Date?,
         set: Int,
         weight: Float,

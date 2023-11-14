@@ -6,6 +6,7 @@ public class DatabaseServiceManager {
     public var activity: ActivityService!
     public var record: RecordService!
     public var muscle: MuscleService!
+    public var trainingRecord: TrainingRecordService!
 
     private init() {}
 
@@ -15,5 +16,6 @@ public class DatabaseServiceManager {
         activity = .init(db: dbm.db)
         record = .init(db: dbm.db)
         muscle = .init(db: dbm.db)
+        trainingRecord = .init(db: dbm.db)
     }
 }

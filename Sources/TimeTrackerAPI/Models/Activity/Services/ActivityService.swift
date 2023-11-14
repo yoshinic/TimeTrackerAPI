@@ -94,9 +94,17 @@ public class ActivityService {
             on: db
         )
     }
-    
+
     public func defaultData() async throws -> [ActivityData] {
         try await ActivityModel.defaultData(on: db).map { $0.toData }
+    }
+
+    public func defaultWeightTrainingData() async throws -> ActivityData {
+        guard
+            let m = try await defaultData()
+            .first(where: { $0.name == "ウェイトトレーニング" })
+        else { throw AppError.notFound }
+        return m
     }
 }
 

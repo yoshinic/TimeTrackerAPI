@@ -1,5 +1,5 @@
-import Foundation
 import FluentKit
+import Foundation
 
 final class RecordModel: Model {
     static let schema = "records"
@@ -28,6 +28,9 @@ final class RecordModel: Model {
     @Field(key: FieldKeys.v1.note)
     var note: String
 
+    @Children(for: \.$record)
+    var muscleTrainingRecords:[MuscleTrainingRecordModel]
+    
     init() {}
 
     init(
