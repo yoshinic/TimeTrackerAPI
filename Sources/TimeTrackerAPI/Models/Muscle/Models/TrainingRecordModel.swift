@@ -6,6 +6,7 @@ final class TrainingRecordModel: Model {
 
     enum FieldKeys {
         enum v1 {
+            static var note: FieldKey { "note" }
             static var menuId: FieldKey { "menu_id" }
             static var startedAt: FieldKey { "started_at" }
             static var endedAt: FieldKey { "ended_at" }
@@ -48,9 +49,12 @@ final class TrainingRecordModel: Model {
     @Field(key: FieldKeys.v1.slope)
     var slope: Float
 
+    @Field(key: FieldKeys.v1.note)
+    var note: String
+
     @Children(for: \.$trainingRecord)
     var muscleTrainingRecords: [MuscleTrainingRecordModel]
-    
+
     init() {}
 
     init(
@@ -63,7 +67,8 @@ final class TrainingRecordModel: Model {
         number: Int,
         speed: Float,
         duration: Float,
-        slope: Float
+        slope: Float,
+        note: String
     ) {
         self.id = id
         self.$menu.id = menuId
@@ -75,5 +80,6 @@ final class TrainingRecordModel: Model {
         self.speed = speed
         self.duration = duration
         self.slope = slope
+        self.note = note
     }
 }

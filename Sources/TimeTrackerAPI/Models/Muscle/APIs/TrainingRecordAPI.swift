@@ -17,7 +17,8 @@ extension TrainingRecordModel {
             number: data.number,
             speed: data.speed,
             duration: data.duration,
-            slope: data.slope
+            slope: data.slope,
+            note: data.note
         )
         try await m.create(on: db)
 
@@ -44,6 +45,7 @@ extension TrainingRecordModel {
         found.speed = data.speed
         found.duration = data.duration
         found.slope = data.slope
+        found.note = data.note
 
         try await found.update(on: db)
 
@@ -120,6 +122,7 @@ struct CreateTrainingRecord {
     let speed: Float
     let duration: Float
     let slope: Float
+    let note: String
 }
 
 struct UpdateTrainingRecord {
@@ -133,6 +136,7 @@ struct UpdateTrainingRecord {
     let speed: Float
     let duration: Float
     let slope: Float
+    let note: String
 }
 
 struct FetchTrainingRecord {

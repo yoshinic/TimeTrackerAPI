@@ -18,7 +18,8 @@ public class TrainingRecordService {
         number: Int,
         speed: Float,
         duration: Float,
-        slope: Float
+        slope: Float,
+        note: String
     ) async throws -> TrainingRecordData {
         let trainingRecord = try await TrainingRecordModel.create(
             id,
@@ -31,7 +32,8 @@ public class TrainingRecordService {
                 number: number,
                 speed: speed,
                 duration: duration,
-                slope: slope
+                slope: slope,
+                note: note
             ),
             on: db
         )
@@ -52,7 +54,8 @@ public class TrainingRecordService {
             number: number,
             speed: speed,
             duration: duration,
-            slope: slope
+            slope: slope,
+            note: note
         )
     }
 
@@ -67,7 +70,8 @@ public class TrainingRecordService {
         number: Int,
         speed: Float,
         duration: Float,
-        slope: Float
+        slope: Float,
+        note: String
     ) async throws -> TrainingRecordData {
         guard
             let found = try await TrainingRecordModel
@@ -84,6 +88,7 @@ public class TrainingRecordService {
         found.speed = speed
         found.duration = duration
         found.slope = slope
+        found.note = note
 
         try await found.update(on: db)
 
@@ -98,7 +103,8 @@ public class TrainingRecordService {
             number: number,
             speed: speed,
             duration: duration,
-            slope: slope
+            slope: slope,
+            note: note
         )
     }
 
@@ -114,9 +120,9 @@ public class TrainingRecordService {
                 on: db
             )
             .map {
-                .init(
+                try .init(
                     id: $0.id!,
-                    recordId: try $0.joined(RecordModel.self).id!,
+                    recordId: $0.joined(RecordModel.self).id!,
                     menuId: $0.$menu.id,
                     startedAt: $0.startedAt,
                     endedAt: $0.endedAt,
@@ -125,7 +131,8 @@ public class TrainingRecordService {
                     number: $0.number,
                     speed: $0.speed,
                     duration: $0.duration,
-                    slope: $0.slope
+                    slope: $0.slope,
+                    note: $0.note
                 )
             }
     }
@@ -153,4 +160,5 @@ public struct TrainingRecordData: Codable, Hashable, Identifiable {
     public let speed: Float
     public let duration: Float
     public let slope: Float
+    public let note: String
 }
