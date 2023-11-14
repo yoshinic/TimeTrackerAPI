@@ -1,5 +1,5 @@
-import Foundation
 import FluentKit
+import Foundation
 
 public class TrainingRecordService {
     private let db: Database
@@ -111,13 +111,20 @@ public class TrainingRecordService {
 
     public func fetch(
         ids: Set<UUID> = [],
+        recordIds: Set<UUID> = [],
         from: Date? = nil,
         to: Date? = nil,
         menuIds: Set<UUID> = []
     ) async throws -> [TrainingRecordData] {
         try await TrainingRecordModel
             .fetch(
-                .init(ids: ids, menuIds: menuIds, from: from, to: to),
+                .init(
+                    ids: ids,
+                    recordIds: recordIds,
+                    menuIds: menuIds,
+                    from: from,
+                    to: to
+                ),
                 on: db
             )
             .map {

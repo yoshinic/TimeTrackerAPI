@@ -64,6 +64,7 @@ extension TrainingRecordModel {
                 guard let data = data else { return }
 
                 and.filter(\.$id ~~ data.ids)
+                and.filter(RecordModel.self, \.$id ~~ data.recordIds)
                 and.filter(\.$menu.$id ~~ data.menuIds)
 
                 if let from = data.from, let to = data.to {
@@ -141,17 +142,20 @@ struct UpdateTrainingRecord {
 
 struct FetchTrainingRecord {
     let ids: Set<UUID>
+    let recordIds: Set<UUID>
     let menuIds: Set<UUID>
     let from: Date?
     let to: Date?
 
     init(
         ids: Set<UUID> = [],
+        recordIds: Set<UUID> = [],
         menuIds: Set<UUID> = [],
         from: Date? = nil,
         to: Date? = nil
     ) {
         self.ids = ids
+        self.recordIds = recordIds
         self.menuIds = menuIds
         self.from = from
         self.to = to
