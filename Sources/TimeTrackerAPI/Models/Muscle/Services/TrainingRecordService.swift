@@ -112,9 +112,9 @@ public class TrainingRecordService {
     public func fetch(
         ids: Set<UUID> = [],
         recordIds: Set<UUID> = [],
+        menuIds: Set<UUID> = [],
         from: Date? = nil,
-        to: Date? = nil,
-        menuIds: Set<UUID> = []
+        to: Date? = nil
     ) async throws -> [TrainingRecordData] {
         try await TrainingRecordModel
             .fetch(
