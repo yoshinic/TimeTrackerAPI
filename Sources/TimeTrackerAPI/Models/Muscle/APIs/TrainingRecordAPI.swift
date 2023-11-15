@@ -29,11 +29,9 @@ extension TrainingRecordModel {
     static func update(
         _ data: UpdateTrainingRecord,
         on db: Database
-    ) async throws -> TrainingRecordModel? {
+    ) async throws -> TrainingRecordModel {
         guard
-            let found = try await TrainingRecordModel
-            .fetch(.init(ids: [data.id]), on: db)
-            .first
+            let found = try await TrainingRecordModel.find(data.id, on: db)
         else { throw AppError.notFound }
 
         found.$menu.id = data.menuId

@@ -93,21 +93,25 @@ public class TrainingRecordService {
         note: String
     ) async throws -> TrainingRecordData {
         try await db.transaction { db in
+            try await TrainingRecordModel.update(.init(
+                id: id,
+                menuId: menuId,
+                startedAt: startedAt,
+                endedAt: endedAt,
+                set: set,
+                weight: weight,
+                number: number,
+                speed: speed,
+                duration: duration,
+                slope: slope,
+                note: note
+            ),
+            on: db)
+
             guard
-                let found = try await TrainingRecordModel.update(.init(
-                    id: id,
-                    menuId: menuId,
-                    startedAt: startedAt,
-                    endedAt: endedAt,
-                    set: set,
-                    weight: weight,
-                    number: number,
-                    speed: speed,
-                    duration: duration,
-                    slope: slope,
-                    note: note
-                ),
-                on: db)
+                let found = try await TrainingRecordModel
+                .fetch(.init(ids: [id]), on: db)
+                .first
             else { throw AppError.notFound }
 
             return try .init(
