@@ -63,9 +63,15 @@ extension TrainingRecordModel {
             .group(.and) { and in
                 guard let data = data else { return }
 
-                and.filter(\.$id ~~ data.ids)
-                and.filter(RecordModel.self, \.$id ~~ data.recordIds)
-                and.filter(\.$menu.$id ~~ data.menuIds)
+                if let _ = data.ids.first {
+                    and.filter(\.$id ~~ data.ids)
+                }
+                if let _ = data.recordIds.first {
+                    and.filter(RecordModel.self, \.$id ~~ data.recordIds)
+                }
+                if let _ = data.menuIds.first {
+                    and.filter(\.$menu.$id ~~ data.menuIds)
+                }
 
                 if let from = data.from, let to = data.to {
                     and.group(.or) { or in
