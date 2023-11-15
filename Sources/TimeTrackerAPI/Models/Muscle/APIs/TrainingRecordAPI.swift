@@ -30,11 +30,11 @@ extension TrainingRecordModel {
         _ data: UpdateTrainingRecord,
         on db: Database
     ) async throws -> TrainingRecordModel? {
-        guard let found = try await TrainingRecordModel
-            .query(on: db)
-            .filter(\.$id == data.id)
-            .first()
-        else { return nil }
+        guard
+            let found = try await TrainingRecordModel
+            .fetch(.init(ids: [data.id]), on: db)
+            .first
+        else { throw AppError.notFound }
 
         found.$menu.id = data.menuId
         found.startedAt = data.startedAt

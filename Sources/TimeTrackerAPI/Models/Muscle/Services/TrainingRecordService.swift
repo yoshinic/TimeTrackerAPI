@@ -44,26 +44,26 @@ public class TrainingRecordService {
                 .init(recordId, trainingRecord.id!),
                 on: db
             )
-            
+
             guard
                 let found = try await TrainingRecordModel
                 .fetch(.init(ids: [trainingRecord.id!]), on: db)
                 .first
             else { throw AppError.notFound }
 
-            return TrainingRecordData(
+            return try TrainingRecordData(
                 id: trainingRecord.id!,
                 recordId: recordId,
                 menu: .init(
                     id: found.$menu.id,
-                    name: try found.joined(TrainingMenuModel.self).name,
+                    name: found.joined(TrainingMenuModel.self).name,
                     mainPart: .init(
-                        id: try found.joined(MusclePartModel.self).requireID(),
-                        name: try found.joined(MusclePartModel.self).name,
-                        order: try found.joined(MusclePartModel.self).order
+                        id: found.joined(MusclePartModel.self).requireID(),
+                        name: found.joined(MusclePartModel.self).name,
+                        order: found.joined(MusclePartModel.self).order
                     ),
-                    aerobic: try found.joined(TrainingMenuModel.self).aerobic,
-                    order: try found.joined(TrainingMenuModel.self).order
+                    aerobic: found.joined(TrainingMenuModel.self).aerobic,
+                    order: found.joined(TrainingMenuModel.self).order
                 ),
                 startedAt: startedAt,
                 endedAt: endedAt,
@@ -94,37 +94,35 @@ public class TrainingRecordService {
     ) async throws -> TrainingRecordData {
         try await db.transaction { db in
             guard
-                let found = try await TrainingRecordModel
-                .fetch(.init(ids: [id]), on: db)
-                .first
+                let found = try await TrainingRecordModel.update(.init(
+                    id: id,
+                    menuId: menuId,
+                    startedAt: startedAt,
+                    endedAt: endedAt,
+                    set: set,
+                    weight: weight,
+                    number: number,
+                    speed: speed,
+                    duration: duration,
+                    slope: slope,
+                    note: note
+                ),
+                on: db)
             else { throw AppError.notFound }
 
-            found.$menu.id = menuId
-            found.startedAt = startedAt
-            found.endedAt = endedAt
-            found.set = set
-            found.weight = weight
-            found.number = number
-            found.speed = speed
-            found.duration = duration
-            found.slope = slope
-            found.note = note
-
-            try await found.update(on: db)
-
-            return .init(
+            return try .init(
                 id: id,
                 recordId: recordId,
                 menu: .init(
                     id: found.$menu.id,
-                    name: try found.joined(TrainingMenuModel.self).name,
+                    name: found.joined(TrainingMenuModel.self).name,
                     mainPart: .init(
-                        id: try found.joined(MusclePartModel.self).requireID(),
-                        name: try found.joined(MusclePartModel.self).name,
-                        order: try found.joined(MusclePartModel.self).order
+                        id: found.joined(MusclePartModel.self).requireID(),
+                        name: found.joined(MusclePartModel.self).name,
+                        order: found.joined(MusclePartModel.self).order
                     ),
-                    aerobic: try found.joined(TrainingMenuModel.self).aerobic,
-                    order: try found.joined(TrainingMenuModel.self).order
+                    aerobic: found.joined(TrainingMenuModel.self).aerobic,
+                    order: found.joined(TrainingMenuModel.self).order
                 ),
                 startedAt: startedAt,
                 endedAt: endedAt,
