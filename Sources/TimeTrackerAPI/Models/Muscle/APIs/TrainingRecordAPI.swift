@@ -58,6 +58,8 @@ extension TrainingRecordModel {
     ) async throws -> [TrainingRecordModel] {
         try await TrainingRecordModel
             .query(on: db)
+            .join(parent: \.$menu)
+            .join(from: TrainingMenuModel.self, parent: \.$mainPart)
             .join(children: \.$muscleTrainingRecords)
             .join(from: MuscleTrainingRecordModel.self, parent: \.$record)
             .group(.and) { and in

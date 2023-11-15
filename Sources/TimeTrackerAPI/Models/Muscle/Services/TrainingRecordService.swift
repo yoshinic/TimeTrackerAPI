@@ -44,11 +44,27 @@ public class TrainingRecordService {
                 .init(recordId, trainingRecord.id!),
                 on: db
             )
+            
+            guard
+                let found = try await TrainingRecordModel
+                .fetch(.init(ids: [trainingRecord.id!]), on: db)
+                .first
+            else { throw AppError.notFound }
 
             return TrainingRecordData(
                 id: trainingRecord.id!,
                 recordId: recordId,
-                menuId: menuId,
+                menu: .init(
+                    id: found.$menu.id,
+                    name: try found.joined(TrainingMenuModel.self).name,
+                    mainPart: .init(
+                        id: try found.joined(MusclePartModel.self).requireID(),
+                        name: try found.joined(MusclePartModel.self).name,
+                        order: try found.joined(MusclePartModel.self).order
+                    ),
+                    aerobic: try found.joined(TrainingMenuModel.self).aerobic,
+                    order: try found.joined(TrainingMenuModel.self).order
+                ),
                 startedAt: startedAt,
                 endedAt: endedAt,
                 set: set,
@@ -99,7 +115,17 @@ public class TrainingRecordService {
             return .init(
                 id: id,
                 recordId: recordId,
-                menuId: menuId,
+                menu: .init(
+                    id: found.$menu.id,
+                    name: try found.joined(TrainingMenuModel.self).name,
+                    mainPart: .init(
+                        id: try found.joined(MusclePartModel.self).requireID(),
+                        name: try found.joined(MusclePartModel.self).name,
+                        order: try found.joined(MusclePartModel.self).order
+                    ),
+                    aerobic: try found.joined(TrainingMenuModel.self).aerobic,
+                    order: try found.joined(TrainingMenuModel.self).order
+                ),
                 startedAt: startedAt,
                 endedAt: endedAt,
                 set: set,
@@ -135,7 +161,17 @@ public class TrainingRecordService {
                 try .init(
                     id: $0.id!,
                     recordId: $0.joined(RecordModel.self).id!,
-                    menuId: $0.$menu.id,
+                    menu: .init(
+                        id: $0.$menu.id,
+                        name: $0.joined(TrainingMenuModel.self).name,
+                        mainPart: .init(
+                            id: $0.joined(MusclePartModel.self).requireID(),
+                            name: $0.joined(MusclePartModel.self).name,
+                            order: $0.joined(MusclePartModel.self).order
+                        ),
+                        aerobic: $0.joined(TrainingMenuModel.self).aerobic,
+                        order: $0.joined(TrainingMenuModel.self).order
+                    ),
                     startedAt: $0.startedAt,
                     endedAt: $0.endedAt,
                     set: $0.set,
@@ -165,7 +201,7 @@ public class TrainingRecordService {
 public struct TrainingRecordData: Codable, Hashable, Identifiable {
     public let id: UUID
     public let recordId: UUID
-    public let menuId: UUID
+    public let menu: TrainingMenuData
     public let startedAt: Date?
     public let endedAt: Date?
     public let set: Int
@@ -175,4 +211,18 @@ public struct TrainingRecordData: Codable, Hashable, Identifiable {
     public let duration: Float
     public let slope: Float
     public let note: String
+}
+
+public struct TrainingMenuData: Codable, Hashable, Identifiable {
+    public let id: UUID
+    public let name: String
+    public let mainPart: MusclePartData
+    public let aerobic: Bool
+    public let order: Int
+}
+
+public struct MusclePartData: Codable, Hashable, Identifiable {
+    public let id: UUID
+    public let name: String
+    public let order: Int
 }

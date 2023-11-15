@@ -20,10 +20,10 @@ final class MusclePartModel: Model {
     @Field(key: FieldKeys.v1.order)
     var order: Int
 
-    @ChildrenProperty(for: \.$musclePart)
+    @Children(for: \.$musclePart)
     var details: [MusclePartDetailModel]
     
-    @ChildrenProperty(for: \.$musclePart)
+    @Children(for: \.$musclePart)
     var muscles: [MuscleModel]
     
     @Children(for: \.$mainPart)
