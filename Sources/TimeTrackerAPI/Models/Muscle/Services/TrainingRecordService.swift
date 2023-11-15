@@ -22,9 +22,32 @@ public class TrainingRecordService {
         slope: Float,
         note: String
     ) async throws -> TrainingRecordData {
-        let trainingRecord = try await TrainingRecordModel.create(
-            id,
-            data: .init(
+        try await db.transaction { db in
+            let trainingRecord = try await TrainingRecordModel.create(
+                id,
+                data: .init(
+                    menuId: menuId,
+                    startedAt: startedAt,
+                    endedAt: endedAt,
+                    set: set,
+                    weight: weight,
+                    number: number,
+                    speed: speed,
+                    duration: duration,
+                    slope: slope,
+                    note: note
+                ),
+                on: db
+            )
+
+            try await MuscleTrainingRecordModel.create(
+                .init(recordId, trainingRecord.id!),
+                on: db
+            )
+
+            return TrainingRecordData(
+                id: trainingRecord.id!,
+                recordId: recordId,
                 menuId: menuId,
                 startedAt: startedAt,
                 endedAt: endedAt,
@@ -35,29 +58,8 @@ public class TrainingRecordService {
                 duration: duration,
                 slope: slope,
                 note: note
-            ),
-            on: db
-        )
-
-        try await MuscleTrainingRecordModel.create(
-            .init(recordId, trainingRecord.id!),
-            on: db
-        )
-
-        return TrainingRecordData(
-            id: trainingRecord.id!,
-            recordId: recordId,
-            menuId: menuId,
-            startedAt: startedAt,
-            endedAt: endedAt,
-            set: set,
-            weight: weight,
-            number: number,
-            speed: speed,
-            duration: duration,
-            slope: slope,
-            note: note
-        )
+            )
+        }
     }
 
     public func update(
@@ -74,39 +76,41 @@ public class TrainingRecordService {
         slope: Float,
         note: String
     ) async throws -> TrainingRecordData {
-        guard
-            let found = try await TrainingRecordModel
-            .fetch(.init(ids: [id]), on: db)
-            .first
-        else { throw AppError.notFound }
+        try await db.transaction { db in
+            guard
+                let found = try await TrainingRecordModel
+                .fetch(.init(ids: [id]), on: db)
+                .first
+            else { throw AppError.notFound }
 
-        found.$menu.id = menuId
-        found.startedAt = startedAt
-        found.endedAt = endedAt
-        found.set = set
-        found.weight = weight
-        found.number = number
-        found.speed = speed
-        found.duration = duration
-        found.slope = slope
-        found.note = note
+            found.$menu.id = menuId
+            found.startedAt = startedAt
+            found.endedAt = endedAt
+            found.set = set
+            found.weight = weight
+            found.number = number
+            found.speed = speed
+            found.duration = duration
+            found.slope = slope
+            found.note = note
 
-        try await found.update(on: db)
+            try await found.update(on: db)
 
-        return .init(
-            id: id,
-            recordId: recordId,
-            menuId: menuId,
-            startedAt: startedAt,
-            endedAt: endedAt,
-            set: set,
-            weight: weight,
-            number: number,
-            speed: speed,
-            duration: duration,
-            slope: slope,
-            note: note
-        )
+            return .init(
+                id: id,
+                recordId: recordId,
+                menuId: menuId,
+                startedAt: startedAt,
+                endedAt: endedAt,
+                set: set,
+                weight: weight,
+                number: number,
+                speed: speed,
+                duration: duration,
+                slope: slope,
+                note: note
+            )
+        }
     }
 
     public func fetch(
@@ -149,10 +153,12 @@ public class TrainingRecordService {
         recordId: UUID,
         trainingRecordId: UUID
     ) async throws {
-        try await MuscleTrainingRecordModel
-            .delete(.init(recordId, trainingRecordId), on: db)
-        try await TrainingRecordModel
-            .delete(.init(ids: [trainingRecordId]), on: db)
+        try await db.transaction { db in
+            try await MuscleTrainingRecordModel
+                .delete(.init(recordId, trainingRecordId), on: db)
+            try await TrainingRecordModel
+                .delete(.init(ids: [trainingRecordId]), on: db)
+        }
     }
 }
 
