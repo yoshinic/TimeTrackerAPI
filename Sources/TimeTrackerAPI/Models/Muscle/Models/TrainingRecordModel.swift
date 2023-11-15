@@ -6,7 +6,6 @@ final class TrainingRecordModel: Model {
 
     enum FieldKeys {
         enum v1 {
-            static var note: FieldKey { "note" }
             static var menuId: FieldKey { "menu_id" }
             static var startedAt: FieldKey { "started_at" }
             static var endedAt: FieldKey { "ended_at" }
@@ -16,6 +15,7 @@ final class TrainingRecordModel: Model {
             static var speed: FieldKey { "speed" }
             static var duration: FieldKey { "duration" }
             static var slope: FieldKey { "slope" }
+            static var note: FieldKey { "note" }
         }
     }
 

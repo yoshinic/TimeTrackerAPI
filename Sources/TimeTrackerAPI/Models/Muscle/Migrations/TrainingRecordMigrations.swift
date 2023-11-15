@@ -15,6 +15,7 @@ enum TrainingRecordMigrations {
                 .field(TrainingRecordModel.FieldKeys.v1.speed, .float, .required)
                 .field(TrainingRecordModel.FieldKeys.v1.duration, .float, .required)
                 .field(TrainingRecordModel.FieldKeys.v1.slope, .float, .required)
+                .field(TrainingRecordModel.FieldKeys.v1.note, .string, .required)
 
                 .foreignKey(
                     TrainingRecordModel.FieldKeys.v1.menuId,
