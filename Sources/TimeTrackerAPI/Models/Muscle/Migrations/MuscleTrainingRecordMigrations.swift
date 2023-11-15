@@ -19,7 +19,7 @@ enum MuscleTrainingRecordMigrations {
 
                 .foreignKey(
                     MuscleTrainingRecordModel.FieldKeys.v1.recordId,
-                    references: TrainingRecordModel.schema,
+                    references: RecordModel.schema,
                     .id
                 )
                 .foreignKey(
